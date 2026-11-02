@@ -1,0 +1,43 @@
+[project]
+name = "hospital-ai-suite"
+version = "1.0.0"
+description = "Hospital AI Suite backend: AI medical scribe + AI voice receptionist on one API"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=2.3",
+    "fastapi>=0.115",
+    "httpx>=0.28",
+    "psycopg[binary]>=3.2",
+    "pydantic-settings>=2.6",
+    "python-multipart>=0.0.20",
+    "sqlalchemy>=2.0.36",
+    "tzdata>=2024.1",
+    "uvicorn[standard]>=0.32",
+    "websockets>=13",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3"]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008"]  # FastAPI's Depends(...) in argument defaults is the intended pattern
+
+[tool.ruff.lint.per-file-ignores]
+"app/scribe/samples/*" = ["E501"]  # scripted consultation text
+"app/scribe/notes/*" = ["E501"]    # prompt and template text
