@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
-from sqlalchemy import DateTime, MetaData, create_engine, func
+from sqlalchemy import DateTime, MetaData, create_engine, func, inspect
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
 from app.core.config import get_settings
@@ -75,8 +75,24 @@ def alembic_config():
     return config
 
 
+class LegacySchemaError(RuntimeError):
+    """The database holds the pre-normalisation schema, which these migrations cannot upgrade in place."""
+
+
+def _check_not_legacy() -> None:
+    # Older databases (create_all, or the earlier one-file "0001_initial_schema" migration) still have the single-row
+    # clinic_schedule table; upgrading them would run 0002+ against the wrong tables.
+    tables = set(inspect(engine).get_table_names())
+    if "clinic_schedule" in tables or (tables and "alembic_version" not in tables):
+        raise LegacySchemaError(
+            f"Database {engine.url.database!r} has the old schema (synthetic pilot data). Drop and recreate it, "
+            "or point DATABASE_URL at an empty database; the backend then builds the current schema on start."
+        )
+
+
 def init_db() -> None:
     """Bring the schema up to the latest migration. Safe to run on every start."""
     from alembic import command
 
+    _check_not_legacy()
     command.upgrade(alembic_config(), "head")

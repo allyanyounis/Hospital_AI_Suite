@@ -41,14 +41,22 @@ documented example next to it.
 
 | Key | Needed for |
 |---|---|
-| `ANTHROPIC_API_KEY` | Scribe note drafting, safety check, codes, tasks, letters with `NOTE_PROVIDER=claude` (default) |
-| `GROQ_API_KEY` | The same with `NOTE_PROVIDER=groq` (model `GROQ_MODEL`, default `openai/gpt-oss-120b`); `ollama` needs no key |
+| `NOTE_PROVIDER` | Which AI writes the notes: `claude` (default), `groq` or `ollama` (local, no key) |
+| `ANTHROPIC_API_KEY` | Notes with `NOTE_PROVIDER=claude` (model `NOTE_MODEL`, default `claude-opus-5-5`) |
+| `GROQ_API_KEY` | Notes with `NOTE_PROVIDER=groq` (model `GROQ_MODEL`, default `openai/gpt-oss-120b`) |
 | `DEEPGRAM_API_KEY` | Scribe live / uploaded audio transcription (sample consultations work without it) |
 | `VAPI_SECRET` | Rejects webhook calls that don't come from your VAPI assistant |
+
+The chosen provider handles everything AI in the scribe: note drafting, safety check, ICD-10 codes, task list and
+letters. Groq's free plan allows about 8,000 tokens a minute (roughly one note and its safety check); when Groq asks
+the app to slow down it waits and retries, so codes, tasks and letters can take 10–30 seconds on the free plan.
 
 Use `127.0.0.1` rather than `localhost` in `DATABASE_URL` and `BACKEND_URL`: on Windows `localhost` tries IPv6
 first and the container listens on IPv4. Restart the backend after editing `backend/.env`, and the frontend after
 editing `frontend/.env.local`.
+
+Run only **one** backend at a time. Two copies of the project both started on port 8000 share the port on Windows,
+and the browser may reach the wrong (older) one.
 
 <details><summary>Manual setup (any OS)</summary>
 
@@ -158,6 +166,10 @@ PostgreSQL 17 in Docker, schema normalised to 3NF and managed by Alembic. Tables
 To change the schema: edit the owning module's `models.py`, run `alembic revision --autogenerate -m "..."` in
 `backend/`, review the generated file, run the tests. `docker compose down -v` wipes the database.
 
+A database from before the normalised schema (created by `create_all`, or by the earlier one-file
+`0001_initial_schema` migration) can't be upgraded in place: the backend refuses to start on it and says so. It
+only ever held synthetic data, so drop and recreate it (or `docker compose down -v`) and start again.
+
 ## Checks
 
 ```bash
@@ -174,7 +186,7 @@ module's internals.
 | Control | How |
 |---|---|
 | Sign-in | Named accounts created by an admin (no open sign-up), scrypt hashes, signed 12h httpOnly cookie, lockout after 5 failures; password resets, role changes and disabling sign the user out everywhere |
-| Access | Three roles (**admin**, **doctor**, **patient**) mapped to permissions in one table ([permissions.py](backend/app/modules/auth/permissions.py)); every API checks a permission; the UI shows only what the user's permissions allow; doctors see only their own encounters; patients see only their own profile and appointments |
+| Access | Five roles (**admin**, **doctor**, **nurse**, **receptionist**, **patient**) mapped to permissions in one table ([permissions.py](backend/app/modules/auth/permissions.py)); every API checks a permission; the UI shows only what the user's permissions allow; doctors see only their own encounters; patients see only their own profile and appointments |
 | Public webhooks | VAPI endpoints never return other patients' names, only free times; optional shared secret |
 | Audit trail | Sign-ins, drafts, safety checks, approvals, letters, bookings, cancellations and schedule changes |
 | Retention | Scribe transcripts, notes and patient details erased after `RETENTION_DAYS` (default 7); audio never stored |
@@ -183,7 +195,7 @@ module's internals.
 ## Before real patients
 
 This is pilot-ready software, not a cleared deployment. Before any real patient data: data processing agreements
-(Anthropic, Deepgram, VAPI and its model providers) and data residency; hosting inside the hospital network behind
+(Anthropic or Groq, Deepgram, VAPI and its model providers) and data residency; hosting inside the hospital network behind
 HTTPS (`SECURE_COOKIES=true`) with encrypted, backed-up PostgreSQL; hospital SSO; a clinical safety case signed off
 by the clinical safety officer; privacy impact assessment and patient notice/consent for recording; a measured pilot
 and accuracy audit. The **Call Costs** page shows sample numbers until VAPI call data is connected.

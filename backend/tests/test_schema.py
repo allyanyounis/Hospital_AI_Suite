@@ -5,11 +5,11 @@ from datetime import UTC, datetime
 import pytest
 from alembic.autogenerate import compare_metadata
 from alembic.migration import MigrationContext
-from sqlalchemy import func, select
+from sqlalchemy import func, select, text
 from sqlalchemy.exc import IntegrityError
 
 from app.core.clock import to_aware
-from app.core.database import Base, engine, session_scope
+from app.core.database import Base, LegacySchemaError, engine, init_db, session_scope
 from app.models import (
     Appointment,
     Encounter,
@@ -43,6 +43,18 @@ def test_migrations_match_the_models(client):
     with engine.connect() as conn:
         context = MigrationContext.configure(conn, opts={"compare_type": True, "compare_server_default": True})
         assert compare_metadata(context, Base.metadata) == []
+
+
+def test_start_refuses_a_database_with_the_old_schema(client):
+    with engine.begin() as conn:
+        conn.execute(text("CREATE TABLE clinic_schedule (id integer PRIMARY KEY)"))
+    try:
+        with pytest.raises(LegacySchemaError, match="old schema"):
+            init_db()
+    finally:
+        with engine.begin() as conn:
+            conn.execute(text("DROP TABLE clinic_schedule"))
+    init_db()
 
 
 # --- Receptionist ------------------------------------------------------------------------------------------------
