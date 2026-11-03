@@ -28,7 +28,7 @@ const enc = (id: string) => `/api/encounters/${id}`;
 export const api = {
   // Session
   config: () => http.get<AppConfig>("/api/config"),
-  me: () => http.get<User>("/api/me"),
+  session: () => http.get<{ user: User | null }>("/api/session"),
   login: (username: string, password: string) => http.post<User>("/api/login", { username, password }),
   logout: () => http.post<{ ok: boolean }>("/api/logout"),
 

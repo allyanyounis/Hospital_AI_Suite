@@ -1,13 +1,13 @@
 """Sign-in, sign-out, the current user, and the public app configuration."""
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel
 
 from .audit import audit
 from .config import get_settings
 from .scribe.notes import NoteGenerationError, get_note_generator
 from .scribe.notes.ollama import OllamaNoteGenerator
-from .security import COOKIE_NAME, User, authenticate, current_user, is_locked_out, issue_token
+from .security import COOKIE_NAME, User, authenticate, current_user, is_locked_out, issue_token, user_from_cookies
 
 router = APIRouter(prefix="/api", tags=["session"])
 settings = get_settings()
@@ -50,6 +50,13 @@ def logout(response: Response, user: User = Depends(current_user)):
 @router.get("/me")
 def me(user: User = Depends(current_user)):
     return user.as_dict()
+
+
+@router.get("/session")
+def session(request: Request):
+    """The signed-in user, or null. Unlike /me this never returns 401, so the UI can check quietly on page load."""
+    user = user_from_cookies(request.cookies)
+    return {"user": user.as_dict() if user else None}
 
 
 @router.get("/config")

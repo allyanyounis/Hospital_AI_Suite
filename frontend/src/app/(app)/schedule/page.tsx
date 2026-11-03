@@ -91,7 +91,8 @@ export default function SchedulePage() {
     <main className="space-y-5 px-4 py-6 sm:px-8">
       <PageHeader
         icon={<Icons.Calendar className="h-6 w-6" />}
-        title="Clinic Scheduler"
+        title="Clinic Schedulers
+        "
         subtitle="Working hours, breaks and closed dates. The AI receptionist only books inside these hours, and the scribe uses them to spot after-hours sign-offs."
         aside={
           <div className="flex gap-2">

@@ -59,7 +59,12 @@ export function useLiveEvents(onEvent: (event: LiveEvent) => void): boolean {
     return () => {
       closed = true;
       clearTimeout(retry);
-      ws?.close();
+      if (!ws) return;
+      // Closing mid-handshake makes the browser log an error (React mounts twice in development), so let it
+      // finish opening first and close it then.
+      const socket = ws;
+      if (socket.readyState === WebSocket.CONNECTING) socket.onopen = () => socket.close();
+      else socket.close();
     };
   }, []);
 

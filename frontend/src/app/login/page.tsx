@@ -47,8 +47,8 @@ function SignInCard() {
   useEffect(() => {
     // Already signed in? Skip the form.
     api
-      .me()
-      .then(() => router.replace(next))
+      .session()
+      .then(({ user }) => user && router.replace(next))
       .catch(() => {});
     api
       .config()

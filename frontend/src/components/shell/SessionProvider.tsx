@@ -23,12 +23,10 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [offline, setOffline] = useState(false);
 
   useEffect(() => {
-    Promise.all([api.config(), api.me()])
-      .then(([config, user]) => setSession({ config, user }))
-      .catch((e) => {
-        if (e instanceof UnauthorizedError) router.replace(`/login?next=${encodeURIComponent(pathname)}`);
-        else setOffline(true);
-      });
+    const toLogin = () => router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+    Promise.all([api.config(), api.session()])
+      .then(([config, { user }]) => (user ? setSession({ config, user }) : toLogin()))
+      .catch((e) => (e instanceof UnauthorizedError ? toLogin() : setOffline(true)));
     // Only on first load; navigation between signed-in pages keeps the session
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -34,9 +34,11 @@ class Settings(BaseSettings):
     deepgram_api_key: str | None = None
     deepgram_model: str = "nova-3-medical"
 
-    note_provider: str = "claude"  # "claude" or "ollama" (local, no key)
+    note_provider: str = "claude"  # "claude", "groq" or "ollama" (local, no key)
     anthropic_api_key: str | None = None
     note_model: str = "claude-opus-5-5"
+    groq_api_key: str | None = None
+    groq_model: str = "openai/gpt-oss-120b"
     note_effort: str = "low"  # keeps drafting fast mid-clinic; the safety review runs deeper
     review_effort: str = "medium"
     ollama_url: str = "http://localhost:11434"

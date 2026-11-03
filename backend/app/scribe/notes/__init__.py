@@ -12,6 +12,7 @@ from .extras import (
     suggest_codes,
     suggest_tasks,
 )
+from .groq import GroqNoteGenerator
 from .ollama import OllamaNoteGenerator
 from .review import NoteReview, review_note
 from .templates import TEMPLATES, NoteTemplate
@@ -50,4 +51,8 @@ def get_note_generator(settings: Settings) -> NoteGenerator:
         if not settings.anthropic_api_key:
             raise NoteGenerationError("ANTHROPIC_API_KEY is not set in backend/.env")
         return ClaudeNoteGenerator(settings.anthropic_api_key, settings.note_model, settings.note_effort)
+    if settings.note_provider == "groq":
+        if not settings.groq_api_key:
+            raise NoteGenerationError("GROQ_API_KEY is not set in backend/.env")
+        return GroqNoteGenerator(settings.groq_api_key, settings.groq_model, settings.note_effort)
     raise NoteGenerationError(f"Unknown note provider '{settings.note_provider}'")
