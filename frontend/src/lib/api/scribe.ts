@@ -1,42 +1,6 @@
-/** Data contracts shared with the FastAPI backend. */
+/** AI medical scribe. */
 
-// --- Session -----------------------------------------------------------------------------------------------------
-
-export type User = { username: string; display_name: string; role: "clinician" | "admin" };
-
-export type AppConfig = {
-  environment_banner: string;
-  retention_days: number;
-  clinic_timezone: string;
-  transcriber: string;
-  transcriber_ready: boolean;
-  note_model: string;
-  notes_ready: boolean;
-};
-
-// --- Clinic schedule (shared by both modules) --------------------------------------------------------------------
-
-export type BreakPeriod = { start: string; end: string }; // "HH:MM"
-export type DaySchedule = { enabled: boolean; start: string; end: string; breaks: BreakPeriod[] };
-export type ClinicScheduleInput = { days: DaySchedule[]; slot_minutes: number; holidays: string[] };
-export type ClinicSchedule = ClinicScheduleInput & { is_default: boolean; updated_at: string | null };
-
-// --- AI receptionist ---------------------------------------------------------------------------------------------
-
-export type Appointment = {
-  id: number;
-  patient_name: string;
-  reason: string | null;
-  start_time: string;
-  canceled: boolean;
-  created_at: string;
-  /** "AI: ..." / "User: ..." lines; null if not booked by a voice call */
-  transcript: string | null;
-};
-
-export type LiveEvent = "appointment_booked" | "appointment_canceled" | "transcript_saved" | "schedule_updated";
-
-// --- AI scribe ---------------------------------------------------------------------------------------------------
+import { http } from "./client";
 
 export type Segment = { id: number; speaker: number; start: number; end: number; text: string };
 export type Transcript = { segments: Segment[]; provider: string; duration: number | null };
@@ -138,3 +102,35 @@ export type LiveMessage =
   | { type: "encounter"; encounter: Encounter }
   | { type: "empty" }
   | { type: "error"; message: string };
+
+const enc = (id: string) => `/api/encounters/${id}`;
+
+export const scribeApi = {
+  // Reference data
+  templates: () => http.get<NoteTemplate[]>("/api/templates"),
+  documentTypes: () => http.get<DocumentType[]>("/api/document-types"),
+  samples: () => http.get<Sample[]>("/api/samples"),
+
+  // Encounters
+  encounters: () => http.get<EncounterSummary[]>("/api/encounters"),
+  encounter: (id: string) => http.get<EncounterDetail>(enc(id)),
+  startFromSample: (sampleId: string) => http.post<Encounter>("/api/encounters/sample", { sample_id: sampleId }),
+  startFromRecording: (audio: Blob) => {
+    const form = new FormData();
+    form.append("audio", audio, `recording.${audio.type.includes("mp4") ? "mp4" : "webm"}`);
+    return http.upload<Encounter>("/api/encounters/recording", form);
+  },
+  setPatient: (id: string, patient: Patient) => http.put<{ ok: boolean }>(`${enc(id)}/patient`, patient),
+  startDraft: (id: string, templateId: string, clinicianSpeaker: number) =>
+    http.post<{ status: string }>(`${enc(id)}/note/start`, { template_id: templateId, clinician_speaker: clinicianSpeaker }),
+  reviewNote: (id: string, note: Note) => http.post<{ findings: Finding[] }>(`${enc(id)}/review`, { note }),
+  approveNote: (id: string, note: Note) => http.post(`${enc(id)}/approve`, { note }),
+  document: (id: string, typeId: string) => http.post<GeneratedDocument>(`${enc(id)}/documents`, { type_id: typeId }),
+  generateCodes: (id: string) => http.post<SavedCodes>(`${enc(id)}/codes`),
+  saveCodes: (id: string, codes: SavedCodes) => http.put<SavedCodes>(`${enc(id)}/codes`, codes),
+  generateTasks: (id: string) => http.post<SavedTasks>(`${enc(id)}/tasks`),
+  saveTasks: (id: string, tasks: SavedTasks) => http.put<SavedTasks>(`${enc(id)}/tasks`, tasks),
+
+  // Pilot metrics
+  metrics: (all: boolean) => http.get<Metrics>(all ? "/api/metrics/all" : "/api/metrics"),
+};

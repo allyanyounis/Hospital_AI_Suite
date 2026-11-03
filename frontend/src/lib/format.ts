@@ -73,15 +73,6 @@ export function countdown(target: Date, now = new Date()): string {
   return `in ${Math.floor(hours / 24)}d ${hours % 24}h`;
 }
 
-/** The last `n` calendar days ending today, oldest first. */
-export function lastDays(n: number, now = new Date()): Date[] {
-  return Array.from({ length: n }, (_, i) => {
-    const d = startOfDay(now);
-    d.setDate(d.getDate() - (n - 1 - i));
-    return d;
-  });
-}
-
 /** The next `n` calendar days starting today. */
 export function nextDays(n: number, now = new Date()): Date[] {
   return Array.from({ length: n }, (_, i) => {

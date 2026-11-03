@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from ..models import ClinicSchedule as ScheduleRow
+from .models import ClinicSchedule as ScheduleRow
 from .schemas import DAY_NAMES, BreakPeriod, ClinicSchedule, ClinicScheduleIn, DaySchedule, default_schedule
 
 __all__ = [

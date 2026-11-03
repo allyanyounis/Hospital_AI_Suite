@@ -9,9 +9,9 @@ from sqlalchemy.orm import Session
 
 from ..audit import audit
 from ..database import get_db
-from ..models import Appointment
+from ..events import broadcaster
 from ..security import User, current_user, websocket_user
-from .events import broadcaster
+from .models import Appointment
 
 router = APIRouter(prefix="/api/reception", tags=["reception"])
 

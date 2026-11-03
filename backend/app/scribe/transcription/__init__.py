@@ -1,11 +1,11 @@
-from ...config import Settings
+from ..settings import ScribeSettings
 from .base import Segment, Transcriber, Transcript, TranscriptionError
 from .deepgram import DeepgramTranscriber
 
 __all__ = ["Segment", "Transcript", "Transcriber", "TranscriptionError", "get_transcriber"]
 
 
-def get_transcriber(settings: Settings) -> Transcriber:
+def get_transcriber(settings: ScribeSettings) -> Transcriber:
     """Pick the adapter from the TRANSCRIBER setting. Adding a provider = one adapter + one branch here."""
     if settings.transcriber == "deepgram":
         if not settings.deepgram_api_key:

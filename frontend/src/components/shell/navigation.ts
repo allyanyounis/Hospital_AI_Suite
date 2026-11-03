@@ -1,34 +1,21 @@
 import { Icons, type IconComponent } from "@/components/icons";
+import { RECEPTION_CLINIC_NAV, RECEPTION_NAV } from "@/components/reception/navigation";
+import { SCRIBE_CLINIC_NAV, SCRIBE_NAV } from "@/components/scribe/navigation";
 
 export type NavItem = { href: string; label: string; icon: IconComponent };
 export type NavGroup = { title: string; items: NavItem[] };
 
+/** The sidebar. Each module declares its own entries in components/<module>/navigation.ts. */
 export const NAVIGATION: NavGroup[] = [
-  {
-    title: "Overview",
-    items: [{ href: "/", label: "Dashboard", icon: Icons.Grid }],
-  },
-  {
-    title: "AI Scribe",
-    items: [
-      { href: "/scribe/session", label: "Live Session", icon: Icons.Mic },
-      { href: "/scribe/board", label: "Board", icon: Icons.Pulse },
-      { href: "/scribe/encounters", label: "Encounters", icon: Icons.File },
-    ],
-  },
-  {
-    title: "AI Receptionist",
-    items: [
-      { href: "/reception/agent", label: "Voice Agent", icon: Icons.Bot },
-      { href: "/reception/appointments", label: "Appointments", icon: Icons.CalendarClock },
-    ],
-  },
+  { title: "Overview", items: [{ href: "/", label: "Dashboard", icon: Icons.Grid }] },
+  { title: "AI Scribe", items: SCRIBE_NAV },
+  { title: "AI Receptionist", items: RECEPTION_NAV },
   {
     title: "Clinic",
     items: [
       { href: "/schedule", label: "Scheduler", icon: Icons.Calendar },
-      { href: "/scribe/metrics", label: "Pilot Metrics", icon: Icons.Chart },
-      { href: "/reception/monitoring", label: "Call Costs", icon: Icons.Activity },
+      ...SCRIBE_CLINIC_NAV,
+      ...RECEPTION_CLINIC_NAV,
       { href: "/account", label: "Account", icon: Icons.User },
     ],
   },
@@ -36,12 +23,4 @@ export const NAVIGATION: NavGroup[] = [
 
 export function isActive(pathname: string, href: string): boolean {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
-}
-
-export function pageTitle(pathname: string): string {
-  for (const group of NAVIGATION) {
-    const item = group.items.find((i) => isActive(pathname, i.href));
-    if (item) return item.label;
-  }
-  return "Dashboard";
 }

@@ -13,9 +13,9 @@ from ..audit import audit
 from ..clock import now_utc
 from ..config import get_settings
 from ..database import get_db, session_scope
-from ..models import Encounter
 from ..security import User, admin_user, current_user
 from . import metrics
+from .models import Encounter
 from .notes import (
     DOCUMENT_TYPES,
     TEMPLATES,

@@ -12,9 +12,9 @@ from sqlalchemy.orm import Session
 
 from ..clock import now_local, to_aware, to_local
 from ..config import get_settings
-from ..models import Appointment
 from ..schedule import DAY_NAMES, ClinicSchedule, DaySchedule
 from ..schedule.schemas import parse_hhmm
+from .models import Appointment
 
 
 @dataclass

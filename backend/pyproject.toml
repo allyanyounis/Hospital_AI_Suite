@@ -4,6 +4,7 @@ version = "1.0.0"
 description = "Hospital AI Suite backend: AI medical scribe + AI voice receptionist on one API"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.14",
     "anthropic>=2.3",
     "fastapi>=0.115",
     "httpx>=0.28",
@@ -17,7 +18,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.3"]
+dev = ["pytest>=8.3", "ruff>=0.8"]
 
 [build-system]
 requires = ["setuptools>=75"]

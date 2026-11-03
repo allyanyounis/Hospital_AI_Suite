@@ -9,8 +9,9 @@ from sqlalchemy.orm import Session
 
 from ..clock import now_local, now_utc, to_local
 from ..config import Settings
-from ..models import AuditLog, Encounter, User
+from ..models import AuditLog, User
 from ..schedule import load_schedule
+from .models import Encounter
 from .notes import GeneratedNote
 
 

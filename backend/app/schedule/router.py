@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from ..audit import audit
 from ..database import get_db
-from ..reception.events import broadcaster
+from ..events import broadcaster
 from ..security import User, current_user
 from . import ClinicSchedule, ClinicScheduleIn, load_schedule, save_schedule
 

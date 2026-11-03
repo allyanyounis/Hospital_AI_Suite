@@ -44,7 +44,7 @@ def session_scope() -> Iterator[Session]:
 
 
 def init_db() -> None:
-    """Create any missing tables. Safe to run on every start."""
-    from . import models  # noqa: F401  (registers the tables on Base.metadata)
+    """Bring the schema up to date by applying any new migrations (app/migrations). Safe to run on every start."""
+    from .migrations import upgrade_to_head
 
-    Base.metadata.create_all(engine)
+    upgrade_to_head(engine)

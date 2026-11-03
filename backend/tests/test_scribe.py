@@ -6,7 +6,8 @@ from datetime import UTC, datetime
 from sqlalchemy import select
 
 from app.database import session_scope
-from app.models import AuditLog, Encounter
+from app.models import AuditLog
+from app.scribe.models import Encounter
 from app.scribe.repository import purge_expired_content
 from tests.conftest import login
 

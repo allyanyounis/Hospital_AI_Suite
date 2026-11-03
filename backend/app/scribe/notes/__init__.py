@@ -1,4 +1,4 @@
-from ...config import Settings
+from ..settings import ScribeSettings
 from .base import GeneratedNote, NoteGenerationError, NoteGenerator, draft_note, note_to_text
 from .claude import ClaudeNoteGenerator
 from .documents import DOCUMENT_TYPES, DocumentType, GeneratedDocument, write_document
@@ -43,7 +43,7 @@ __all__ = [
 ]
 
 
-def get_note_generator(settings: Settings) -> NoteGenerator:
+def get_note_generator(settings: ScribeSettings) -> NoteGenerator:
     """Pick the adapter from the NOTE_PROVIDER setting. Adding a provider = one adapter + one branch here."""
     if settings.note_provider == "ollama":
         return OllamaNoteGenerator(settings.ollama_url, settings.ollama_model)

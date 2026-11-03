@@ -89,31 +89,85 @@ database doesn't exist, create it once:
 
 ## How it's built
 
+The suite is a small shared core plus one folder per feature module. Each module owns its tables, settings,
+API routes and pages, and plugs into the core in one place on each side.
+
 ```
-backend/                       FastAPI + SQLAlchemy 2 + PostgreSQL (psycopg 3)
-  app/main.py                  App, middleware, routers
-  app/config.py                All settings (env / .env)
-  app/database.py, models.py   Engine, sessions, tables (users, audit_log, clinic_schedule, encounters, appointments)
+backend/                       FastAPI + SQLAlchemy 2 + PostgreSQL (psycopg 3) + Alembic
+  app/main.py                  Creates the app, then starts and mounts every module in app/modules.py
+  app/modules.py               The list of modules (order = route order)
+  app/module.py                What a module provides: routers, startup tasks, keys for /api/config
+  app/config.py                Shared settings; combines each module's settings into one Settings object
+  app/database.py              Engine, sessions; init_db() applies migrations
+  app/models.py                Shared tables: users, audit_log
+  app/migrations/              Alembic migrations (versions/0001_initial_schema.py = the starting schema)
   app/security.py              scrypt passwords, signed session cookie, lockout, roles, WebSocket origin check
-  app/auth_router.py           /api/login, /api/logout, /api/me, /api/session, /api/config
+  app/auth_router.py           /api/login, /api/logout, /api/me, /api/session
+  app/system_router.py         /api/health, /api/config (each module adds its own keys)
+  app/events.py                Live updates over WebSocket, used by any module
   app/audit.py                 Audit trail (ids and counts only, never clinical content)
   app/users.py                 Account CLI: python -m app.users add|reset-password|disable|enable|list
   app/schedule/                Shared clinic schedule: hours, breaks, slot length, closed dates (+ /api/schedule)
-  app/scribe/                  Scribe API, live transcription WebSocket, metrics, retention
+  app/scribe/                  Scribe module: API, live transcription WebSocket, metrics, retention
     notes/                     Drafting, safety review, codes, tasks, letters + one adapter per AI provider
                                (claude.py, groq.py, ollama.py)
     transcription/  samples/   Speech-to-text adapters, demo consultations
-  app/reception/               Receptionist: booking rules, VAPI payload parsing, public webhooks, dashboard API, live events
+  app/reception/               Receptionist module: booking rules, VAPI payload parsing, public webhooks, dashboard API
   tests/                       29 tests (scribe flow, live stream, booking rules, webhooks, schedule)
+
+  Every module folder has the same files:
+    module.py                  module = Module(routers=..., on_startup=..., public_config=...)
+    models.py                  Its tables
+    settings.py                Its settings (optional)
+    router.py                  Its API
 
 frontend/                      Next.js 16 + React 19 + Tailwind 4 (proxies /api/* to the backend)
   src/app/globals.css          The colour theme, defined once (brand-* maroon, amber highlights)
   src/app/login/               Staff sign-in
-  src/app/(app)/               Signed-in pages: / (overview), scribe/*, reception/*, schedule, account
-  src/components/shell/        Session, sidebar navigation, top bar
+  src/app/(app)/               Signed-in pages: / (dashboard home), scribe/*, reception/*, schedule, account
+  src/components/shell/        Session, sidebar (navigation.ts combines every module's menu entries), top bar
+  src/components/<module>/     A module's components, incl. navigation.ts (menu) and overview.tsx (home page cards)
   src/components/ui.tsx        Shared cards, stats, notices, toggles, status pills
-  src/lib/api/                 Typed API client
+  src/lib/api/                 Typed API client: one file per module (session, schedule, scribe, reception);
+                               index.ts combines them into `api`
 ```
+
+### Adding a module
+
+Say the new module is `pharmacy`:
+
+1. **Backend:** create `backend/app/pharmacy/` with `models.py` (tables), `router.py` (API, prefix `/api/pharmacy`)
+   and `module.py`:
+   ```python
+   from ..module import Module
+   from . import router
+
+   module = Module(name="pharmacy", routers=[router.router])
+   ```
+   Then add it to `MODULES` in `app/modules.py`. If it has settings, add a `settings.py` with a
+   `PharmacySettings(BaseSettings)` class and add that class to `Settings` in `app/config.py`.
+2. **Database:** create the migration for the new tables (see *Changing the database*).
+3. **Frontend:** add `src/lib/api/pharmacy.ts` (types + `pharmacyApi`) and spread it into `api` in
+   `src/lib/api/index.ts`; put pages under `src/app/(app)/pharmacy/` and components under
+   `src/components/pharmacy/`; add its menu entries in `src/components/pharmacy/navigation.ts` and list them in
+   `src/components/shell/navigation.ts`; optionally add home page cards in `src/components/pharmacy/overview.tsx`.
+4. **Tests:** add `backend/tests/test_pharmacy.py`.
+
+Sign-in, roles, the audit log, the clinic schedule, live updates, the UI components and the colour theme are
+shared, so a new module uses them without changes.
+
+### Changing the database
+
+Tables are managed by Alembic migrations in `backend/app/migrations/versions/`. The backend applies any new
+migrations every time it starts, so your data is kept when the schema changes. After adding or changing a table in
+a `models.py`, run from the `backend` folder:
+
+```powershell
+.\.venv\Scripts\python.exe -m alembic revision --autogenerate -m "add allergies to encounters"
+```
+
+Check the generated file in `app/migrations/versions/`, then restart the backend to apply it.
+`.\.venv\Scripts\python.exe -m alembic check` confirms the database matches the code.
 
 **Changing the colours:** edit the `--color-brand-*` scale in `frontend/src/app/globals.css` and the matching hex
 values in `frontend/src/lib/theme.ts` (used by charts). Every page follows.
@@ -121,8 +175,9 @@ values in `frontend/src/lib/theme.ts` (used by charts). Every page follows.
 ## Database
 
 One PostgreSQL database, `hospital_ai`, holds everything (tests use a separate `hospital_ai_test`). Tables are
-created automatically when the backend starts and are defined in `backend/app/models.py`. Times are stored with time
-zone; transcripts, notes, codes and tasks are stored as JSONB.
+created and updated by migrations when the backend starts (see *Changing the database*) and are defined in each
+module's `models.py` (shared tables in `app/models.py`). Times are stored with time zone; transcripts, notes,
+codes and tasks are stored as JSONB.
 
 | Table | Used by | Holds |
 |---|---|---|

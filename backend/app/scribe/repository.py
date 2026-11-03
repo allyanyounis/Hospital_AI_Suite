@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from ..audit import audit
 from ..clock import now_utc
 from ..database import session_scope
-from ..models import Encounter
+from .models import Encounter
 from .transcription import Transcript
 
 # Erased by the retention purge; timings and edit counts stay for metrics

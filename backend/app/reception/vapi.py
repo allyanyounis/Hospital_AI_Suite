@@ -16,9 +16,9 @@ from sqlalchemy.orm import Session
 from ..audit import audit
 from ..config import get_settings
 from ..database import get_db
+from ..events import broadcaster
 from ..schedule import load_schedule
 from . import booking, parsing
-from .events import broadcaster
 
 log = logging.getLogger("hospital_ai.vapi")
 
