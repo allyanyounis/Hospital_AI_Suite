@@ -3,12 +3,15 @@
 import time
 from datetime import UTC, datetime
 
+import pytest
 from sqlalchemy import select
 
-from app.database import session_scope
-from app.models import AuditLog
-from app.scribe.models import Encounter
-from app.scribe.repository import purge_expired_content
+from app.core.config import Settings
+from app.core.database import session_scope
+from app.models import AuditLog, Encounter
+from app.modules.scribe.notes import NoteGenerationError, get_note_generator
+from app.modules.scribe.notes.groq import GroqNoteGenerator
+from app.modules.scribe.repository import purge_expired_content
 from tests.conftest import login
 
 
@@ -20,8 +23,8 @@ def _age_encounter(encounter_id: str) -> None:
 def test_requires_sign_in(client):
     assert client.get("/api/me").status_code == 401
     assert client.post("/api/encounters/sample", json={"sample_id": "ed-chest-pain"}).status_code == 401
-    assert client.get("/api/reception/appointments").status_code == 401
-    assert client.get("/api/schedule").status_code == 401
+    assert client.get("/api/appointments").status_code == 401
+    assert client.get("/api/closures").status_code == 401
     assert client.post("/api/login", json={"username": "drtest", "password": "wrong"}).status_code == 401
 
 
@@ -136,3 +139,10 @@ def test_clinical_codes_and_tasks(client):
     detail = client.get(f"/api/encounters/{eid}").json()
     assert [t["done"] for t in detail["tasks"]["tasks"]] == [True, False]
     assert detail["codes"]["codes"][0]["code"] == "R07.9"
+
+
+def test_note_provider_is_chosen_from_settings():
+    with pytest.raises(NoteGenerationError, match="GROQ_API_KEY"):
+        get_note_generator(Settings(note_provider="groq", groq_api_key=None))
+    generator = get_note_generator(Settings(note_provider="groq", groq_api_key="k"))
+    assert isinstance(generator, GroqNoteGenerator) and generator.model == "openai/gpt-oss-120b"

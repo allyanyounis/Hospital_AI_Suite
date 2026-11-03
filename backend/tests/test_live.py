@@ -8,11 +8,10 @@ import pytest
 from sqlalchemy import func, select
 from starlette.websockets import WebSocketDisconnect
 
-from app.database import session_scope
-from app.models import AuditLog
-from app.scribe import live_router
-from app.scribe.models import Encounter
-from app.scribe.transcription.live import LiveTranscriptBuilder
+from app.core.database import session_scope
+from app.models import AuditLog, Encounter
+from app.modules.scribe import live_router
+from app.modules.scribe.transcription.live import LiveTranscriptBuilder
 from tests.conftest import ORIGIN, login
 
 

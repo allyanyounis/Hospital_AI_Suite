@@ -1,0 +1,273 @@
+{
+ "now": 650,
+ "today": "2026-11-02",
+ "rooms": [
+  {
+   "code": "OR 1",
+   "finish": 801,
+   "forecast": {
+    "over_pct": 0,
+    "expected_over": 0,
+    "finish_p90": 860
+   },
+   "cases": [
+    {
+     "case": "C01",
+     "start": 480,
+     "end": 578,
+     "state": "done",
+     "risk": 15,
+     "late_pct": 0,
+     "latest": 616
+    },
+    {
+     "case": "C02",
+     "start": 590,
+     "end": 688,
+     "state": "in",
+     "risk": 6,
+     "late_pct": 0,
+     "latest": 726
+    },
+    {
+     "case": "C03",
+     "start": 700,
+     "end": 801,
+     "state": "wait",
+     "risk": 16,
+     "late_pct": 14,
+     "latest": 842
+    }
+   ],
+   "suggestion": null,
+   "nudge": null
+  },
+  {
+   "code": "OR 2",
+   "finish": 1024,
+   "forecast": {
+    "over_pct": 89,
+    "expected_over": 65,
+    "finish_p90": 1097
+   },
+   "cases": [
+    {
+     "case": "C04",
+     "start": 480,
+     "end": 688,
+     "state": "in",
+     "risk": 49,
+     "late_pct": 0,
+     "latest": 726
+    },
+    {
+     "case": "C05",
+     "start": 700,
+     "end": 809,
+     "state": "wait",
+     "risk": 6,
+     "late_pct": 100,
+     "latest": 852
+    },
+    {
+     "case": "C06",
+     "start": 821,
+     "end": 949,
+     "state": "wait",
+     "risk": 60,
+     "late_pct": 89,
+     "latest": 987
+    },
+    {
+     "case": "C07",
+     "start": 961,
+     "end": 1024,
+     "state": "wait",
+     "risk": 5,
+     "late_pct": 83,
+     "latest": 1046
+    }
+   ],
+   "suggestion": {
+    "case": "C06",
+    "date": "2026-11-03",
+    "over_pct": 7
+   },
+   "nudge": null
+  },
+  {
+   "code": "OR 3",
+   "finish": 767,
+   "forecast": {
+    "over_pct": 0,
+    "expected_over": 0,
+    "finish_p90": 816
+   },
+   "cases": [
+    {
+     "case": "C08",
+     "start": 480,
+     "end": 573,
+     "state": "done",
+     "risk": 13,
+     "late_pct": 0,
+     "latest": 611
+    },
+    {
+     "case": "C09",
+     "start": 583,
+     "end": 679,
+     "state": "in",
+     "risk": 13,
+     "late_pct": 0,
+     "latest": 720
+    },
+    {
+     "case": "C10",
+     "start": 689,
+     "end": 767,
+     "state": "wait",
+     "risk": 10,
+     "late_pct": 16,
+     "latest": 791
+    }
+   ],
+   "suggestion": null,
+   "nudge": null
+  },
+  {
+   "code": "OR 4",
+   "finish": 772,
+   "forecast": {
+    "over_pct": 0,
+    "expected_over": 0,
+    "finish_p90": 850
+   },
+   "cases": [
+    {
+     "case": "C11",
+     "start": 480,
+     "end": 580,
+     "state": "done",
+     "risk": 6,
+     "late_pct": 0,
+     "latest": 634
+    },
+    {
+     "case": "C12",
+     "start": 589,
+     "end": 663,
+     "state": "in",
+     "risk": 4,
+     "late_pct": 0,
+     "latest": 709
+    },
+    {
+     "case": "C13",
+     "start": 672,
+     "end": 772,
+     "state": "wait",
+     "risk": 27,
+     "late_pct": 17,
+     "latest": 826
+    }
+   ],
+   "suggestion": null,
+   "nudge": null
+  },
+  {
+   "code": "OR 5",
+   "finish": 836,
+   "forecast": {
+    "over_pct": 5,
+    "expected_over": 2,
+    "finish_p90": 920
+   },
+   "cases": [
+    {
+     "case": "C18",
+     "start": 480,
+     "end": 836,
+     "state": "in",
+     "risk": 1.8,
+     "late_pct": 0,
+     "latest": 924
+    }
+   ],
+   "suggestion": null,
+   "nudge": null
+  }
+ ],
+ "proposals": [
+  {
+   "case": "C20",
+   "slot": {
+    "day": "2026-11-02",
+    "room": "OR 5",
+    "start": 866,
+    "wait": 216,
+    "met": false
+   },
+   "before_over": 5,
+   "after_over": 100,
+   "pushed": [],
+   "move": null
+  },
+  {
+   "case": "C15",
+   "slot": {
+    "day": "2026-11-02",
+    "room": "OR 2",
+    "start": 700,
+    "wait": 50,
+    "met": true
+   },
+   "before_over": 89,
+   "after_over": 100,
+   "pushed": [
+    "C05",
+    "C06",
+    "C07"
+   ],
+   "move": "C06"
+  },
+  {
+   "case": "C16",
+   "slot": {
+    "day": "2026-11-02",
+    "room": "OR 3",
+    "start": 689,
+    "wait": 39,
+    "met": true
+   },
+   "before_over": 0,
+   "after_over": 1,
+   "pushed": [
+    "C10"
+   ],
+   "move": null
+  },
+  {
+   "case": "C14",
+   "slot": {
+    "day": "2026-11-02",
+    "room": "OR 1",
+    "start": 813,
+    "wait": 163,
+    "met": true
+   },
+   "before_over": 0,
+   "after_over": 16,
+   "pushed": [],
+   "move": "C03"
+  }
+ ],
+ "calendar_fit": {
+  "day": "2026-11-03",
+  "room": "OR 1",
+  "start": 810,
+  "end": 908,
+  "surgeon_id": "S1",
+  "surgeon": "Dr Petra Lang"
+ }
+}

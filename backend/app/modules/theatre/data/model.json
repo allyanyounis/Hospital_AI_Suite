@@ -1,0 +1,138 @@
+{
+  "outcome": "ICU stay after surgery or death in hospital",
+  "source": "VitalDB clinical table, Seoul National University Hospital (Lee et al., Scientific Data 2022). Coefficients and held-out scores only.",
+  "intercept": -1.670273680276254,
+  "features": [
+    {
+      "name": "age",
+      "label": "Age",
+      "unit": "years",
+      "median": 59.0,
+      "mean": 57.245653533458416,
+      "sd": 15.017833587513696,
+      "coef": 0.31914869765818216
+    },
+    {
+      "name": "asa",
+      "label": "ASA grade",
+      "unit": "",
+      "median": 2.0,
+      "mean": 1.8542839274546592,
+      "sd": 0.6561991018890669,
+      "coef": 0.5019826046598288
+    },
+    {
+      "name": "emop",
+      "label": "Emergency",
+      "unit": "",
+      "median": 0.0,
+      "mean": 0.12257661038148843,
+      "sd": 0.32798477134891235,
+      "coef": 0.15254096563465977
+    },
+    {
+      "name": "preop_hb",
+      "label": "Haemoglobin",
+      "unit": "g/dL",
+      "median": 13.0,
+      "mean": 12.864185949551803,
+      "sd": 1.9408017024289648,
+      "coef": -0.10958465795573588
+    },
+    {
+      "name": "preop_plt",
+      "label": "Platelets",
+      "unit": "10^9/L",
+      "median": 235.5,
+      "mean": 241.10350218886805,
+      "sd": 82.1375081064712,
+      "coef": -0.2113248776766447
+    },
+    {
+      "name": "preop_alb",
+      "label": "Albumin",
+      "unit": "g/dL",
+      "median": 4.2,
+      "mean": 4.073254117156557,
+      "sd": 0.500366526048811,
+      "coef": -0.2855248371446667
+    },
+    {
+      "name": "preop_cr",
+      "label": "Creatinine",
+      "unit": "mg/dL",
+      "median": 0.78,
+      "mean": 1.0478486554096311,
+      "sd": 1.4910377379157909,
+      "coef": -0.007591637079645057
+    }
+  ],
+  "cases": 6386,
+  "train_cases": 4797,
+  "test_cases": 1589,
+  "base_rate_pct": 19.2,
+  "auc": 0.754,
+  "auc_asa_only": 0.698,
+  "fifths": [
+    {
+      "predicted_pct": 5.2,
+      "observed_pct": 3.5,
+      "cases": 318
+    },
+    {
+      "predicted_pct": 10.1,
+      "observed_pct": 9.7,
+      "cases": 318
+    },
+    {
+      "predicted_pct": 15.8,
+      "observed_pct": 16.0,
+      "cases": 318
+    },
+    {
+      "predicted_pct": 22.3,
+      "observed_pct": 22.0,
+      "cases": 318
+    },
+    {
+      "predicted_pct": 43.7,
+      "observed_pct": 44.8,
+      "cases": 317
+    }
+  ],
+  "emergency": {
+    "cases": 193,
+    "auc": 0.807,
+    "predicted_pct": 35.0,
+    "observed_pct": 36.8
+  },
+  "departments": {
+    "General surgery": {
+      "cases": 1215,
+      "auc": 0.824,
+      "predicted_pct": 19.7,
+      "observed_pct": 14.9
+    },
+    "Thoracic surgery": {
+      "cases": 280,
+      "auc": 0.595,
+      "predicted_pct": 20.3,
+      "observed_pct": 43.9
+    }
+  },
+  "duration_check": {
+    "cases": 5825,
+    "operations": 75,
+    "mae_operation_min": 49.2,
+    "mae_with_patient_min": 49.0,
+    "over_30_pct": 30.2,
+    "over_mean_pct": 43.9,
+    "over_p90_pct": 10.6
+  },
+  "anesthesia": {
+    "median_total_min": 175,
+    "median_surgery_min": 110,
+    "median_before_incision_min": 48,
+    "median_after_closure_min": 15
+  }
+}

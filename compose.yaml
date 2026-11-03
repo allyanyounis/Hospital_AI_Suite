@@ -1,0 +1,26 @@
+# Local development database. Start with:  docker compose up -d db
+# Credentials default to the backend's built-in DATABASE_URL; override them in a root .env (never committed).
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: hospital_ai_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hospital_ai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hospital_ai}
+      POSTGRES_DB: ${POSTGRES_DB:-hospital_ai}
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --locale=C.UTF-8
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"  # localhost only
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pgdata:
+    name: hospital_ai_pgdata

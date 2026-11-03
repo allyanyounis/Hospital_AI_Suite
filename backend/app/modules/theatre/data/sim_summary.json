@@ -1,0 +1,326 @@
+{
+  "evidence_label": "SYNTHETIC DAYS",
+  "duration_label": "PUBLIC DISTRIBUTIONS",
+  "seed": 20261029,
+  "start": "2021-01-04",
+  "end": "2025-12-31",
+  "weekdays": 1303,
+  "rooms": 4,
+  "procedures_available": 450,
+  "procedures_used": 433,
+  "booked": 19805,
+  "done": 18511,
+  "cancelled": 1294,
+  "cancel_pct": 6.5,
+  "overtime_min": 40685,
+  "overtime_hours": 678.1,
+  "median_day_overtime_min": 2,
+  "p90_day_overtime_min": 99,
+  "max_day_overtime_min": 459,
+  "days_without_overtime_pct": 48.7,
+  "in_room_min": 1871968,
+  "staffed_min": 2501760,
+  "staffed_share_pct": 74.8,
+  "benchmark_usd_per_min": 58,
+  "benchmark_overtime_usd": 2359730,
+  "reasons": [
+    {
+      "id": "ran_out_of_time",
+      "label": "Previous cases ran past 16:00",
+      "count": 150
+    },
+    {
+      "id": "surgeon_unavailable",
+      "label": "Rostered surgeon away, no cover",
+      "count": 635
+    },
+    {
+      "id": "patient_unfit",
+      "label": "Patient unfit on the day",
+      "count": 213
+    },
+    {
+      "id": "patient_absent",
+      "label": "Patient did not attend",
+      "count": 144
+    },
+    {
+      "id": "no_bed",
+      "label": "No ward or ICU bed",
+      "count": 105
+    },
+    {
+      "id": "equipment",
+      "label": "Equipment unavailable",
+      "count": 47
+    }
+  ],
+  "years": [
+    {
+      "year": 2021,
+      "booked": 3952,
+      "done": 3724,
+      "cancelled": 228,
+      "overtime_min": 7818,
+      "in_room_min": 375102,
+      "staffed_share_pct": 75.1,
+      "cancel_pct": 5.8
+    },
+    {
+      "year": 2022,
+      "booked": 3958,
+      "done": 3667,
+      "cancelled": 291,
+      "overtime_min": 8328,
+      "in_room_min": 372252,
+      "staffed_share_pct": 74.6,
+      "cancel_pct": 7.4
+    },
+    {
+      "year": 2023,
+      "booked": 3930,
+      "done": 3660,
+      "cancelled": 270,
+      "overtime_min": 9341,
+      "in_room_min": 375703,
+      "staffed_share_pct": 75.3,
+      "cancel_pct": 6.9
+    },
+    {
+      "year": 2024,
+      "booked": 3999,
+      "done": 3764,
+      "cancelled": 235,
+      "overtime_min": 7295,
+      "in_room_min": 377331,
+      "staffed_share_pct": 75.0,
+      "cancel_pct": 5.9
+    },
+    {
+      "year": 2025,
+      "booked": 3966,
+      "done": 3696,
+      "cancelled": 270,
+      "overtime_min": 7903,
+      "in_room_min": 371580,
+      "staffed_share_pct": 74.1,
+      "cancel_pct": 6.8
+    }
+  ],
+  "quarters": [
+    {
+      "label": "2021 Q1",
+      "booked": 956,
+      "done": 907,
+      "cancelled": 49,
+      "overtime_min": 2044,
+      "cancel_pct": 5.1
+    },
+    {
+      "label": "2021 Q2",
+      "booked": 994,
+      "done": 925,
+      "cancelled": 69,
+      "overtime_min": 1648,
+      "cancel_pct": 6.9
+    },
+    {
+      "label": "2021 Q3",
+      "booked": 1002,
+      "done": 946,
+      "cancelled": 56,
+      "overtime_min": 1651,
+      "cancel_pct": 5.6
+    },
+    {
+      "label": "2021 Q4",
+      "booked": 1000,
+      "done": 946,
+      "cancelled": 54,
+      "overtime_min": 2475,
+      "cancel_pct": 5.4
+    },
+    {
+      "label": "2022 Q1",
+      "booked": 971,
+      "done": 916,
+      "cancelled": 55,
+      "overtime_min": 1703,
+      "cancel_pct": 5.7
+    },
+    {
+      "label": "2022 Q2",
+      "booked": 989,
+      "done": 921,
+      "cancelled": 68,
+      "overtime_min": 2143,
+      "cancel_pct": 6.9
+    },
+    {
+      "label": "2022 Q3",
+      "booked": 1015,
+      "done": 915,
+      "cancelled": 100,
+      "overtime_min": 2459,
+      "cancel_pct": 9.9
+    },
+    {
+      "label": "2022 Q4",
+      "booked": 983,
+      "done": 915,
+      "cancelled": 68,
+      "overtime_min": 2023,
+      "cancel_pct": 6.9
+    },
+    {
+      "label": "2023 Q1",
+      "booked": 989,
+      "done": 913,
+      "cancelled": 76,
+      "overtime_min": 2353,
+      "cancel_pct": 7.7
+    },
+    {
+      "label": "2023 Q2",
+      "booked": 1010,
+      "done": 925,
+      "cancelled": 85,
+      "overtime_min": 2521,
+      "cancel_pct": 8.4
+    },
+    {
+      "label": "2023 Q3",
+      "booked": 959,
+      "done": 913,
+      "cancelled": 46,
+      "overtime_min": 2930,
+      "cancel_pct": 4.8
+    },
+    {
+      "label": "2023 Q4",
+      "booked": 972,
+      "done": 909,
+      "cancelled": 63,
+      "overtime_min": 1537,
+      "cancel_pct": 6.5
+    },
+    {
+      "label": "2024 Q1",
+      "booked": 1018,
+      "done": 976,
+      "cancelled": 42,
+      "overtime_min": 1406,
+      "cancel_pct": 4.1
+    },
+    {
+      "label": "2024 Q2",
+      "booked": 998,
+      "done": 931,
+      "cancelled": 67,
+      "overtime_min": 1404,
+      "cancel_pct": 6.7
+    },
+    {
+      "label": "2024 Q3",
+      "booked": 991,
+      "done": 925,
+      "cancelled": 66,
+      "overtime_min": 2121,
+      "cancel_pct": 6.7
+    },
+    {
+      "label": "2024 Q4",
+      "booked": 992,
+      "done": 932,
+      "cancelled": 60,
+      "overtime_min": 2364,
+      "cancel_pct": 6.0
+    },
+    {
+      "label": "2025 Q1",
+      "booked": 971,
+      "done": 909,
+      "cancelled": 62,
+      "overtime_min": 1740,
+      "cancel_pct": 6.4
+    },
+    {
+      "label": "2025 Q2",
+      "booked": 1001,
+      "done": 944,
+      "cancelled": 57,
+      "overtime_min": 2122,
+      "cancel_pct": 5.7
+    },
+    {
+      "label": "2025 Q3",
+      "booked": 997,
+      "done": 935,
+      "cancelled": 62,
+      "overtime_min": 2135,
+      "cancel_pct": 6.2
+    },
+    {
+      "label": "2025 Q4",
+      "booked": 997,
+      "done": 908,
+      "cancelled": 89,
+      "overtime_min": 1906,
+      "cancel_pct": 8.9
+    }
+  ],
+  "specialties": [
+    {
+      "specialty": "General",
+      "booked": 4163,
+      "done": 3921,
+      "cancelled": 242,
+      "overtime_min": 11739,
+      "closed_days": 34,
+      "cancel_pct": 5.8
+    },
+    {
+      "specialty": "Trauma",
+      "booked": 4170,
+      "done": 3939,
+      "cancelled": 231,
+      "overtime_min": 8045,
+      "closed_days": 38,
+      "cancel_pct": 5.5
+    },
+    {
+      "specialty": "Gyn & Obstetrics",
+      "booked": 5227,
+      "done": 4875,
+      "cancelled": 352,
+      "overtime_min": 9843,
+      "closed_days": 48,
+      "cancel_pct": 6.7
+    },
+    {
+      "specialty": "Otolaryngology",
+      "booked": 6245,
+      "done": 5776,
+      "cancelled": 469,
+      "overtime_min": 11058,
+      "closed_days": 47,
+      "cancel_pct": 7.5
+    }
+  ],
+  "assumptions": [
+    "Each weekday from 4 Jan 2021 through 31 Dec 2025 is one operating day. Four specialty rooms run 08:00\u201316:00.",
+    "The list for a room is a fresh weighted draw from the public Specialized inpatient case mix. A case is added while its expected room time still finishes by 16:00.",
+    "Expected room time is the sum of the five published interval means. The played duration is one draw from each published distribution, summed and rounded.",
+    "A case that has started always finishes, including after 16:00. A case that has not started by 16:00 is cancelled because the room ran out of time.",
+    "Three roster labels serve each specialty. One is rostered each weekday. On 6% of rostered days that surgeon is away, and a colleague covers 45% of those days. Otherwise the room's list is cancelled.",
+    "Each booked case also has a scenario chance of 1.2% unfit, 0.8% did not attend, 0.5% no bed, and 0.3% equipment. Those chances are assumptions, not measured German rates.",
+    "Published day-of-surgery cancellation rates in other hospitals range from under 2% to about 30%. This run is a scenario on public duration distributions, not a forecast for one hospital.",
+    "The dollar figure multiplies overtime minutes by $58, rounded from the $57.71 California FY2022 mean operating-room cost reported in JAMA Surgery. It is a published benchmark, shown for scale."
+  ],
+  "cleaning_min": {
+    "General": 12,
+    "Trauma": 12,
+    "Gyn & Obstetrics": 10,
+    "Otolaryngology": 9
+  }
+}

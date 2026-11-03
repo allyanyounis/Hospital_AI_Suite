@@ -1,28 +1,47 @@
 # Hospital AI Suite
 
-One clinic dashboard combining two AI tools that share sign-in, data, schedule and look:
+The core of a **Hospital Management System**: departments, staff and roles, a master patient index, doctors' OPD
+schedules and appointments, built so further hospital services (admissions and beds, laboratory, pharmacy,
+billing) plug in as modules. Two AI tools run on top of it:
 
 - **AI Medical Scribe**: record a consultation, get a speaker-labelled transcript, draft a structured note where
   every line cites the transcript, run a safety check, sign, then generate ICD-10 codes, a task list and letters.
-- **AI Voice Receptionist**: a VAPI voice agent that books, checks and cancels appointments inside the clinic's
-  hours, with a live appointments board and call transcripts.
+- **AI Voice Receptionist**: a VAPI voice agent that books, checks and cancels appointments with the right doctor
+  inside their OPD hours, alongside front-desk booking, a live appointments board and call transcripts.
+
+Plus a **patient chart** (labs, vitals, reports, history, allergies) and an **operating theatre planner**: a live
+board of every theatre's list with a Monte Carlo forecast of overrunning past 16:00, a suggested case to move and
+where, emergency intake by NCEPOD urgency, booking against surgeons' rosters and leave, per-case risk (VitalDB
+model, EuroSCORE II), and a research page (risk model audit, CP-SAT replanning experiment). Load the synthetic
+theatre hospital with `python -m app seed demo-theatre` (from `backend/`).
 
 **Synthetic data only** until the items in *Before real patients* (below) are done.
 
 ## Quick start (Windows)
 
-Requires Python 3.12, Node 20+ and PostgreSQL 17 (running locally).
+Requires Python 3.12, Node 20+ and Docker Desktop (PostgreSQL 17 runs in a container).
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\setup.ps1   # venv, npm, database, .env, admin account
-powershell -File scripts\dev.ps1                             # backend :8000 + frontend :3004
+powershell -ExecutionPolicy Bypass -File scripts\setup.ps1   # once: db container, venv, npm, env files, migrations, admin
+powershell -File scripts\dev.ps1                             # every time: db + backend :8000 + frontend :3004
 ```
 
-Open http://localhost:3004 and sign in. Then add keys to `backend/.env` (restart the backend after editing):
+Open http://localhost:3004 and sign in. API docs: http://localhost:8000/docs.
 
-| Setting | Needed for |
+## Configuration (env files)
+
+Every setting comes from an env file (or the environment, which wins). All three are git-ignored; each has a
+documented example next to it.
+
+| File | Read by | Holds |
+|---|---|---|
+| `.env` (repo root) | `docker compose` | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_PORT` for the container |
+| `backend/.env` ([example](backend/.env.example)) | the API | `DATABASE_URL`, `SESSION_SECRET`, `ANTHROPIC_API_KEY`, `DEEPGRAM_API_KEY`, `VAPI_SECRET`, `HOSPITAL_NAME`, `HOSPITAL_TIMEZONE`, governance settings |
+| `frontend/.env.local` ([example](frontend/.env.example)) | Next.js | `NEXT_PUBLIC_VAPI_PUBLIC_KEY`, `NEXT_PUBLIC_VAPI_ASSISTANT_ID`, `BACKEND_URL`, `NEXT_PUBLIC_BACKEND_PORT` / `NEXT_PUBLIC_BACKEND_WS_URL` |
+
+| Key | Needed for |
 |---|---|
-| `NOTE_PROVIDER` | Which AI writes the notes: `claude`, `groq` or `ollama` (local, no key) |
+| `NOTE_PROVIDER` | Which AI writes the notes: `claude` (default), `groq` or `ollama` (local, no key) |
 | `ANTHROPIC_API_KEY` | Notes with `NOTE_PROVIDER=claude` (model `NOTE_MODEL`, default `claude-opus-5-5`) |
 | `GROQ_API_KEY` | Notes with `NOTE_PROVIDER=groq` (model `GROQ_MODEL`, default `openai/gpt-oss-120b`) |
 | `DEEPGRAM_API_KEY` | Scribe live / uploaded audio transcription (sample consultations work without it) |
@@ -32,33 +51,46 @@ The chosen provider handles everything AI in the scribe: note drafting, safety c
 letters. Groq's free plan allows about 8,000 tokens a minute (roughly one note and its safety check); when Groq asks
 the app to slow down it waits and retries, so codes, tasks and letters can take 10–30 seconds on the free plan.
 
-The VAPI public key and assistant id go in `frontend/.env.local`.
+Use `127.0.0.1` rather than `localhost` in `DATABASE_URL` and `BACKEND_URL`: on Windows `localhost` tries IPv6
+first and the container listens on IPv4. Restart the backend after editing `backend/.env`, and the frontend after
+editing `frontend/.env.local`.
 
-<details><summary>Manual setup (Windows PowerShell)</summary>
+Run only **one** backend at a time. Two copies of the project both started on port 8000 share the port on Windows,
+and the browser may reach the wrong (older) one.
 
-Backend (first terminal):
+<details><summary>Manual setup (any OS)</summary>
 
-```powershell
+```bash
+docker compose up -d db                             # PostgreSQL 17 on 127.0.0.1:5432 (+ hospital_ai_test)
+
 cd backend
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
-Copy-Item .env.example .env        # then set DATABASE_URL, SESSION_SECRET and your API keys
-.\.venv\Scripts\python.exe -m app.users add drrahman --name "Dr. Rahman" --role admin
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
+python -m venv .venv && .venv/Scripts/activate     # macOS/Linux: source .venv/bin/activate
+pip install -r requirements-dev.txt && pip install --no-deps -e .   # pinned (prod: requirements.txt)
+cp .env.example .env                                # set DATABASE_URL and SESSION_SECRET
+python -m app migrate                               # the API also migrates on start
+python -m app users add drrahman --name "Dr. Rahman" --role admin
+uvicorn app.main:app --reload --port 8000
+
+cd frontend && cp .env.example .env.local && npm install && npm run dev    # second terminal
 ```
-
-Frontend (second terminal):
-
-```powershell
-cd frontend
-Copy-Item .env.example .env.local  # then set the VAPI public key and assistant id
-npm install
-npm run dev
-```
-
-Run only **one** backend at a time. Two copies of the project both started on port 8000 will share the port on
-Windows and the browser may reach the wrong one.
 </details>
+
+## Roles
+
+| Role | Sees |
+|---|---|
+| **admin** | Everything below, plus departments, staff profiles, user accounts, OPD schedule editing, surgeons' theatre rosters and leave, the theatre demo clock, hospital-wide metrics and call costs |
+| **doctor** | Dashboard, patients and their clinical chart, appointments, AI scribe (own encounters and metrics), theatre board with booking, moving and emergency intake, theatre model check, schedules (read-only), staff directory, voice agent test |
+| **nurse** | Dashboard, patients and their clinical chart, appointments, theatre board, schedules and staff directory, read-only |
+| **receptionist** | Dashboard, patient registration, front-desk booking and cancelling, theatre board (read-only), schedules, staff directory, voice agent test |
+| **patient** | **My appointments** portal: their own profile and appointments |
+
+What each role may do is a single table in `backend/app/modules/auth/permissions.py`; the frontend reads the
+signed-in user's permissions from the API, so changing that table changes both. Details: `backend/README.md`.
+
+**Doctors and departments:** an admin creates departments, then gives each staff account a profile (department,
+title, specialty, registration number). Profiles marked **bookable** get their own OPD week (OPD Schedules page)
+and take appointments; hospital-wide closed dates apply to everyone.
 
 ## Pointing the VAPI assistant at this backend
 
@@ -67,211 +99,94 @@ Tools can use `/vapi/schedule_appointment`, `/vapi/cancel_appointment` and `/vap
 The original receptionist URLs (`/schedule_appointment/`, `/list_appointments/`, `/webhook`, …) still work,
 so an existing assistant needs no changes. Set the same secret in VAPI and in `VAPI_SECRET`.
 
-## Checks
-
-```powershell
-cd backend
-.\.venv\Scripts\python.exe -m pytest
-.\.venv\Scripts\python.exe -m ruff check app tests
-
-cd ..\frontend
-npm run typecheck
-npm run lint
-npm run build
-```
-
-Backend tests run against the `hospital_ai_test` database with a fake AI model (no API calls, no cost). If that
-database doesn't exist, create it once:
-
-```powershell
-& "C:\Program Files\PostgreSQL\17\bin\psql.exe" -h localhost -U postgres -c "CREATE DATABASE hospital_ai_test OWNER hospital_ai;"
-```
+With **one** bookable doctor the agent books as before. With several, add an optional `doctor` (name) and/or
+`department` (name or code) argument to the booking and availability tools; when neither identifies one doctor, the
+reply asks the caller which doctor or department they want and lists who takes appointments. When VAPI sends the
+caller's number, a registered patient with that phone number and name is recognised.
 
 ## How it's built
 
-The suite is a small shared core plus one folder per feature module. Each module owns its tables, settings,
-API routes and pages, and plugs into the core in one place on each side.
+Both apps are split into **feature modules** that mirror each other, with shared code kept apart:
+
+| Hospital domain | Backend `app/modules/` | Frontend `src/features/` |
+|---|---|---|
+| Accounts, roles, sign-in | `auth` | `auth`, `account`, `users` |
+| Departments | `organization` | `organization` |
+| Staff profiles, bookable doctors | `staff` | `staff` |
+| Master patient index (registry) | `patients` | `patients` |
+| Doctors' OPD weeks, closed dates | `scheduling` | `schedule` |
+| OPD appointments (all channels) | `appointments` | `appointments` |
+| AI medical scribe | `scribe` (+ `notes/`, `transcription/`, `samples/`) | `scribe` |
+| AI voice receptionist (a booking channel) | `reception` | `reception` |
+| Patient portal | `portal` | `portal` |
+| Labs, vitals, reports, history, allergies | `clinical` | `clinical` (chart at `/patients/[id]`) |
+| Operating theatres (planner, rosters, insights) | `theatre` (+ `engine/`, `experiment/`) | `theatre` |
+| Health, config, live events | `system` | — |
+| App frame, overview | — | `shell`, `dashboard` |
 
 ```
-backend/                       FastAPI + SQLAlchemy 2 + PostgreSQL (psycopg 3) + Alembic
-  app/main.py                  Creates the app, then starts and mounts every module in app/modules.py
-  app/modules.py               The list of modules (order = route order)
-  app/module.py                What a module provides: routers, startup tasks, keys for /api/config
-  app/config.py                Shared settings; combines each module's settings into one Settings object
-  app/database.py              Engine, sessions; init_db() applies migrations
-  app/models.py                Shared tables: users, audit_log
-  app/migrations/              Alembic migrations (versions/0001_initial_schema.py = the starting schema)
-  app/security.py              scrypt passwords, signed session cookie, lockout, roles, WebSocket origin check
-  app/auth_router.py           /api/login, /api/logout, /api/me, /api/session
-  app/system_router.py         /api/health, /api/config (each module adds its own keys)
-  app/events.py                Live updates over WebSocket, used by any module
-  app/audit.py                 Audit trail (ids and counts only, never clinical content)
-  app/users.py                 Account CLI: python -m app.users add|reset-password|disable|enable|list
-  app/schedule/                Shared clinic schedule: hours, breaks, slot length, closed dates (+ /api/schedule)
-  app/scribe/                  Scribe module: API, live transcription WebSocket, metrics, retention
-    notes/                     Drafting, safety review, codes, tasks, letters + one adapter per AI provider
-                               (claude.py, groq.py, ollama.py)
-    transcription/  samples/   Speech-to-text adapters, demo consultations
-  app/reception/               Receptionist module: booking rules, VAPI payload parsing, public webhooks, dashboard API
-  tests/                       29 tests (scribe flow, live stream, booking rules, webhooks, schedule)
-
-  Every module folder has the same files:
-    module.py                  module = Module(routers=..., on_startup=..., public_config=...)
-    models.py                  Its tables
-    settings.py                Its settings (optional)
-    router.py                  Its API
-
-frontend/                      Next.js 16 + React 19 + Tailwind 4 (proxies /api/* to the backend)
-  src/app/globals.css          The colour theme, defined once (brand-* maroon, amber highlights)
-  src/app/login/               Staff sign-in
-  src/app/(app)/               Signed-in pages: / (dashboard home), scribe/*, reception/*, schedule, account
-  src/components/shell/        Session, sidebar (navigation.ts combines every module's menu entries), top bar
-  src/components/<module>/     A module's components, incl. navigation.ts (menu) and overview.tsx (home page cards)
-  src/components/ui.tsx        Shared cards, stats, notices, toggles, status pills
-  src/lib/api/                 Typed API client: one file per module (session, schedule, scribe, reception);
-                               index.ts combines them into `api`
+compose.yaml                   PostgreSQL 17 container (credentials from root .env)
+backend/                       FastAPI + SQLAlchemy 2 + Alembic — see backend/README.md
+  app/core/                    settings, database, module registry, clock, audit trail, live events
+  app/modules/<domain>/        __init__ (public API) · module · models · schemas · service · router
+  app/main.py · models.py · __main__.py   INSTALLED_MODULES · table registry · CLI (migrate, users)
+  migrations/                  schema history
+  tests/                       pytest on PostgreSQL, incl. module-boundary and migration checks
+frontend/                      Next.js 16 + React 19 + Tailwind 4 — see frontend/README.md
+  src/app/                     routes only; each page renders a feature view
+  src/features/<feature>/      index.ts (public API) · routes · api · types · components · views
+  src/features/registry.ts     every feature's routes: navigation and page access are derived from it
+  src/shared/                  http client, UI kit, hooks, formatting, chart theme
+  src/config/env.ts            the only place that reads NEXT_PUBLIC_* variables
+scripts/                       setup.ps1 (once), dev.ps1 (daily)
+docs/database.md               schema, ER diagram and class diagram
 ```
 
-### Adding a module
+Module rules (enforced by `backend/tests/test_architecture.py`, and by convention in the frontend): shared
+infrastructure never imports a feature; features use each other only through their public `__init__` / `index.ts`.
 
-Say the new module is `pharmacy`:
-
-1. **Backend:** create `backend/app/pharmacy/` with `models.py` (tables), `router.py` (API, prefix `/api/pharmacy`)
-   and `module.py`:
-   ```python
-   from ..module import Module
-   from . import router
-
-   module = Module(name="pharmacy", routers=[router.router])
-   ```
-   Then add it to `MODULES` in `app/modules.py`. If it has settings, add a `settings.py` with a
-   `PharmacySettings(BaseSettings)` class and add that class to `Settings` in `app/config.py`.
-2. **Database:** create the migration for the new tables (see *Changing the database*).
-3. **Frontend:** add `src/lib/api/pharmacy.ts` (types + `pharmacyApi`) and spread it into `api` in
-   `src/lib/api/index.ts`; put pages under `src/app/(app)/pharmacy/` and components under
-   `src/components/pharmacy/`; add its menu entries in `src/components/pharmacy/navigation.ts` and list them in
-   `src/components/shell/navigation.ts`; optionally add home page cards in `src/components/pharmacy/overview.tsx`.
-4. **Tests:** add `backend/tests/test_pharmacy.py`.
-
-Sign-in, roles, the audit log, the clinic schedule, live updates, the UI components and the colour theme are
-shared, so a new module uses them without changes.
-
-### Changing the database
-
-Tables are managed by Alembic migrations in `backend/app/migrations/versions/`. The backend applies any new
-migrations every time it starts, so your data is kept when the schema changes. After adding or changing a table in
-a `models.py`, run from the `backend` folder:
-
-```powershell
-.\.venv\Scripts\python.exe -m alembic revision --autogenerate -m "add allergies to encounters"
-```
-
-Check the generated file in `app/migrations/versions/`, then restart the backend to apply it.
-`.\.venv\Scripts\python.exe -m alembic check` confirms the database matches the code.
+**Adding a hospital service** (e.g. laboratory) is adding a module on each side: a backend package with `module.py`
+listed in `INSTALLED_MODULES`, its tables, permissions and a migration; a frontend feature with `routes.ts` listed in
+`src/features/registry.ts`. Step by step: `backend/README.md` and `frontend/README.md`. Planned next phases:
+admissions and beds, laboratory, pharmacy, billing.
 
 **Changing the colours:** edit the `--color-brand-*` scale in `frontend/src/app/globals.css` and the matching hex
-values in `frontend/src/lib/theme.ts` (used by charts). Every page follows.
+values in `frontend/src/shared/lib/theme.ts` (used by charts). Every page follows.
 
 ## Database
 
-One PostgreSQL database, `hospital_ai`, holds everything (tests use a separate `hospital_ai_test`). Tables are
-created and updated by migrations when the backend starts (see *Changing the database*) and are defined in each
-module's `models.py` (shared tables in `app/models.py`). Times are stored with time zone; transcripts, notes,
-codes and tasks are stored as JSONB.
+PostgreSQL 17 in Docker, schema normalised to 3NF and managed by Alembic. Tables: `users`, `audit_log`,
+`departments`, `staff_members`, `patients`, `doctor_schedules` / `schedule_days` / `schedule_breaks` /
+`hospital_closures`, `appointments`, `voice_calls` / `voice_call_bookings`, `encounters` / `encounter_codes` /
+`encounter_tasks`, the clinical tables (`lab_tests` / `lab_results`, `vital_signs`, `clinical_reports`,
+`clinical_history`, `patient_allergies`) and the theatre tables (`theatres`, `procedures`, `surgical_cases` /
+`preop_assessments`, `theatre_rosters`, `staff_leave`). Schema, ER diagram, class diagram and design decisions:
+[docs/database.md](docs/database.md).
 
-| Table | Used by | Holds |
-|---|---|---|
-| `users` | Both | Staff accounts |
-| `audit_log` | Both | Who did what and when (no clinical content) |
-| `clinic_schedule` | Both | Clinic hours, breaks, slot length and closed dates (one row) |
-| `encounters` | Scribe | One row per consultation: transcript, draft and signed note, codes, tasks |
-| `appointments` | Receptionist | Bookings made by the voice agent, with the call transcript |
+To change the schema: edit the owning module's `models.py`, run `alembic revision --autogenerate -m "..."` in
+`backend/`, review the generated file, run the tests. `docker compose down -v` wipes the database.
 
-<details><summary>Columns</summary>
+A database from before the normalised schema (created by `create_all`, or by the earlier one-file
+`0001_initial_schema` migration) can't be upgraded in place: the backend refuses to start on it and says so. It
+only ever held synthetic data, so drop and recreate it (or `docker compose down -v`) and start again.
 
-**`users`**
+## Checks
 
-| Column | Type | Notes |
-|---|---|---|
-| `username` | varchar(64) | Primary key |
-| `display_name` | varchar(120) | Shown in the dashboard, e.g. "Dr. Rahman" |
-| `role` | varchar(20) | `clinician` or `admin` |
-| `password_hash` | varchar(255) | scrypt hash, never the password itself |
-| `active` | boolean | Disabled accounts can't sign in |
-| `created_at` | timestamptz | |
+```bash
+cd backend  && .venv/Scripts/python -m pytest && .venv/Scripts/ruff check app tests migrations
+cd frontend && npm run typecheck && npm run lint && npm run build
+```
 
-**`audit_log`**
-
-| Column | Type | Notes |
-|---|---|---|
-| `id` | bigint | Primary key |
-| `ts` | timestamptz | When it happened |
-| `username` | varchar(64) | Who did it |
-| `action` | varchar(64) | e.g. `login`, `note.approved`, `appointment.booked` |
-| `encounter_id` | varchar(32) | Linked consultation, if any |
-| `detail` | jsonb | Ids, counts and settings only |
-
-**`clinic_schedule`** (single row, `id = 1`)
-
-| Column | Type | Notes |
-|---|---|---|
-| `id` | integer | Always 1 |
-| `days` | jsonb | 7 entries, Monday first: open or closed, start, end, breaks |
-| `slot_minutes` | integer | Appointment length (default 15) |
-| `holidays` | date[] | Dates the clinic is closed |
-| `updated_at` | timestamptz | |
-| `updated_by` | varchar(64) | Who last changed it |
-
-**`encounters`**
-
-| Column | Type | Notes |
-|---|---|---|
-| `id` | varchar(32) | Primary key |
-| `username` | varchar(64) | Clinician; references `users.username` |
-| `created_at` | timestamptz | |
-| `source` | varchar(20) | `live`, `recording` or `sample` |
-| `audio_seconds` | float | Length of the consultation (audio itself is never stored) |
-| `transcript` | jsonb | Speaker-labelled transcript segments |
-| `clinician_speaker` | integer | Which speaker is the clinician |
-| `patient_name`, `patient_mrn`, `patient_sex`, `patient_dob`, `visit_type` | varchar | Patient and visit details |
-| `template_id` | varchar(64) | Note template used |
-| `note_status` | varchar(20) | Empty → `drafting` → `ready` or `failed` |
-| `note_error` | text | Why drafting failed |
-| `model` | varchar(120) | AI model that drafted the note |
-| `draft_note` | jsonb | AI draft; every line cites transcript segments |
-| `draft_seconds` | float | How long drafting took |
-| `drafted_at` | timestamptz | |
-| `final_note` | jsonb | Note as signed by the clinician |
-| `approved_at` | timestamptz | Set when signed |
-| `codes` | jsonb | Suggested ICD-10 codes |
-| `tasks` | jsonb | Follow-up task list |
-| `lines_drafted`, `lines_kept`, `lines_added`, `lines_removed` | integer | Edit counts at sign-off (kept for metrics) |
-| `content_purged_at` | timestamptz | When the retention job erased transcript, notes and patient details |
-
-**`appointments`**
-
-| Column | Type | Notes |
-|---|---|---|
-| `id` | integer | Primary key |
-| `patient_name` | varchar(120) | |
-| `reason` | varchar(255) | Reason for the visit |
-| `start_time` | timestamptz | Appointment time |
-| `canceled` | boolean | |
-| `call_id` | varchar(64) | VAPI call that made the booking |
-| `transcript` | text | End-of-call transcript |
-| `created_at` | timestamptz | |
-
-</details>
-
-To browse the data in pgAdmin: **Databases → hospital_ai → Schemas → public → Tables**, right-click a table →
-**View/Edit Data → All Rows**.
+Backend tests run against the `hospital_ai_test` database in the container with a fake AI model (no API calls,
+no cost). They also fail if the migrations and models describe different schemas, or a module imports another
+module's internals.
 
 ## Governance built in
 
 | Control | How |
 |---|---|
-| Sign-in | Named accounts created by an admin (no open sign-up), scrypt hashes, signed 12h httpOnly cookie, lockout after 5 failures |
-| Access | Every dashboard API requires sign-in; clinicians see only their own encounters; hospital-wide metrics are admin-only |
+| Sign-in | Named accounts created by an admin (no open sign-up), scrypt hashes, signed 12h httpOnly cookie, lockout after 5 failures; password resets, role changes and disabling sign the user out everywhere |
+| Access | Five roles (**admin**, **doctor**, **nurse**, **receptionist**, **patient**) mapped to permissions in one table ([permissions.py](backend/app/modules/auth/permissions.py)); every API checks a permission; the UI shows only what the user's permissions allow; doctors see only their own encounters; patients see only their own profile and appointments |
 | Public webhooks | VAPI endpoints never return other patients' names, only free times; optional shared secret |
 | Audit trail | Sign-ins, drafts, safety checks, approvals, letters, bookings, cancellations and schedule changes |
 | Retention | Scribe transcripts, notes and patient details erased after `RETENTION_DAYS` (default 7); audio never stored |
