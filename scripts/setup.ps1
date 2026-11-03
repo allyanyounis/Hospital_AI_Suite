@@ -57,7 +57,7 @@ END `$`$;
     $template = $template -replace "(?m)^DATABASE_URL=.*$", "DATABASE_URL=postgresql+psycopg://${DbUser}:${appPw}@${PgHost}:${PgPort}/${DbName}"
     $template = $template -replace "(?m)^SESSION_SECRET=.*$", "SESSION_SECRET=$secret"
     Set-Content -Path $envFile -Value $template -Encoding utf8
-    Write-Host "Wrote backend\.env (add your ANTHROPIC_API_KEY, DEEPGRAM_API_KEY and VAPI_SECRET there)."
+    Write-Host "Wrote backend\.env (set NOTE_PROVIDER and its key - ANTHROPIC_API_KEY or GROQ_API_KEY - plus DEEPGRAM_API_KEY and VAPI_SECRET)."
 }
 
 Step "Frontend settings (frontend\.env.local)"

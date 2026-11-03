@@ -22,26 +22,42 @@ Open http://localhost:3004 and sign in. Then add keys to `backend/.env` (restart
 
 | Setting | Needed for |
 |---|---|
-| `ANTHROPIC_API_KEY` | Scribe note drafting, safety check, codes, tasks, letters (or `NOTE_PROVIDER=ollama` for local) |
+| `NOTE_PROVIDER` | Which AI writes the notes: `claude`, `groq` or `ollama` (local, no key) |
+| `ANTHROPIC_API_KEY` | Notes with `NOTE_PROVIDER=claude` (model `NOTE_MODEL`, default `claude-opus-5-5`) |
+| `GROQ_API_KEY` | Notes with `NOTE_PROVIDER=groq` (model `GROQ_MODEL`, default `openai/gpt-oss-120b`) |
 | `DEEPGRAM_API_KEY` | Scribe live / uploaded audio transcription (sample consultations work without it) |
 | `VAPI_SECRET` | Rejects webhook calls that don't come from your VAPI assistant |
 
+The chosen provider handles everything AI in the scribe: note drafting, safety check, ICD-10 codes, task list and
+letters. Groq's free plan allows about 8,000 tokens a minute (roughly one note and its safety check); when Groq asks
+the app to slow down it waits and retries, so codes, tasks and letters can take 10–30 seconds on the free plan.
+
 The VAPI public key and assistant id go in `frontend/.env.local`.
 
-<details><summary>Manual setup (any OS)</summary>
+<details><summary>Manual setup (Windows PowerShell)</summary>
 
-```bash
-# Backend
+Backend (first terminal):
+
+```powershell
 cd backend
-python -m venv .venv && .venv/Scripts/activate     # macOS/Linux: source .venv/bin/activate
-pip install -e ".[dev]"
-cp .env.example .env                                # set DATABASE_URL and SESSION_SECRET
-python -m app.users add drrahman --name "Dr. Rahman" --role admin
-uvicorn app.main:app --reload --port 8000
-
-# Frontend (second terminal)
-cd frontend && cp .env.example .env.local && npm install && npm run dev
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+Copy-Item .env.example .env        # then set DATABASE_URL, SESSION_SECRET and your API keys
+.\.venv\Scripts\python.exe -m app.users add drrahman --name "Dr. Rahman" --role admin
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
 ```
+
+Frontend (second terminal):
+
+```powershell
+cd frontend
+Copy-Item .env.example .env.local  # then set the VAPI public key and assistant id
+npm install
+npm run dev
+```
+
+Run only **one** backend at a time. Two copies of the project both started on port 8000 will share the port on
+Windows and the browser may reach the wrong one.
 </details>
 
 ## Pointing the VAPI assistant at this backend
@@ -53,12 +69,23 @@ so an existing assistant needs no changes. Set the same secret in VAPI and in `V
 
 ## Checks
 
-```bash
-cd backend  && .venv/Scripts/python -m pytest && .venv/Scripts/python -m ruff check app tests
-cd frontend && npm run typecheck && npm run lint && npm run build
+```powershell
+cd backend
+.\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\python.exe -m ruff check app tests
+
+cd ..\frontend
+npm run typecheck
+npm run lint
+npm run build
 ```
 
-Backend tests run against the `hospital_ai_test` database with a fake AI model (no API calls, no cost).
+Backend tests run against the `hospital_ai_test` database with a fake AI model (no API calls, no cost). If that
+database doesn't exist, create it once:
+
+```powershell
+& "C:\Program Files\PostgreSQL\17\bin\psql.exe" -h localhost -U postgres -c "CREATE DATABASE hospital_ai_test OWNER hospital_ai;"
+```
 
 ## How it's built
 
@@ -68,12 +95,14 @@ backend/                       FastAPI + SQLAlchemy 2 + PostgreSQL (psycopg 3)
   app/config.py                All settings (env / .env)
   app/database.py, models.py   Engine, sessions, tables (users, audit_log, clinic_schedule, encounters, appointments)
   app/security.py              scrypt passwords, signed session cookie, lockout, roles, WebSocket origin check
-  app/auth_router.py           /api/login, /api/logout, /api/me, /api/config
+  app/auth_router.py           /api/login, /api/logout, /api/me, /api/session, /api/config
   app/audit.py                 Audit trail (ids and counts only, never clinical content)
   app/users.py                 Account CLI: python -m app.users add|reset-password|disable|enable|list
   app/schedule/                Shared clinic schedule: hours, breaks, slot length, closed dates (+ /api/schedule)
   app/scribe/                  Scribe API, live transcription WebSocket, metrics, retention
-    notes/  transcription/  samples/   LLM drafting/review/codes/letters, speech-to-text adapters, demo cases
+    notes/                     Drafting, safety review, codes, tasks, letters + one adapter per AI provider
+                               (claude.py, groq.py, ollama.py)
+    transcription/  samples/   Speech-to-text adapters, demo consultations
   app/reception/               Receptionist: booking rules, VAPI payload parsing, public webhooks, dashboard API, live events
   tests/                       29 tests (scribe flow, live stream, booking rules, webhooks, schedule)
 
@@ -89,6 +118,99 @@ frontend/                      Next.js 16 + React 19 + Tailwind 4 (proxies /api/
 **Changing the colours:** edit the `--color-brand-*` scale in `frontend/src/app/globals.css` and the matching hex
 values in `frontend/src/lib/theme.ts` (used by charts). Every page follows.
 
+## Database
+
+One PostgreSQL database, `hospital_ai`, holds everything (tests use a separate `hospital_ai_test`). Tables are
+created automatically when the backend starts and are defined in `backend/app/models.py`. Times are stored with time
+zone; transcripts, notes, codes and tasks are stored as JSONB.
+
+| Table | Used by | Holds |
+|---|---|---|
+| `users` | Both | Staff accounts |
+| `audit_log` | Both | Who did what and when (no clinical content) |
+| `clinic_schedule` | Both | Clinic hours, breaks, slot length and closed dates (one row) |
+| `encounters` | Scribe | One row per consultation: transcript, draft and signed note, codes, tasks |
+| `appointments` | Receptionist | Bookings made by the voice agent, with the call transcript |
+
+<details><summary>Columns</summary>
+
+**`users`**
+
+| Column | Type | Notes |
+|---|---|---|
+| `username` | varchar(64) | Primary key |
+| `display_name` | varchar(120) | Shown in the dashboard, e.g. "Dr. Rahman" |
+| `role` | varchar(20) | `clinician` or `admin` |
+| `password_hash` | varchar(255) | scrypt hash, never the password itself |
+| `active` | boolean | Disabled accounts can't sign in |
+| `created_at` | timestamptz | |
+
+**`audit_log`**
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | bigint | Primary key |
+| `ts` | timestamptz | When it happened |
+| `username` | varchar(64) | Who did it |
+| `action` | varchar(64) | e.g. `login`, `note.approved`, `appointment.booked` |
+| `encounter_id` | varchar(32) | Linked consultation, if any |
+| `detail` | jsonb | Ids, counts and settings only |
+
+**`clinic_schedule`** (single row, `id = 1`)
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | integer | Always 1 |
+| `days` | jsonb | 7 entries, Monday first: open or closed, start, end, breaks |
+| `slot_minutes` | integer | Appointment length (default 15) |
+| `holidays` | date[] | Dates the clinic is closed |
+| `updated_at` | timestamptz | |
+| `updated_by` | varchar(64) | Who last changed it |
+
+**`encounters`**
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | varchar(32) | Primary key |
+| `username` | varchar(64) | Clinician; references `users.username` |
+| `created_at` | timestamptz | |
+| `source` | varchar(20) | `live`, `recording` or `sample` |
+| `audio_seconds` | float | Length of the consultation (audio itself is never stored) |
+| `transcript` | jsonb | Speaker-labelled transcript segments |
+| `clinician_speaker` | integer | Which speaker is the clinician |
+| `patient_name`, `patient_mrn`, `patient_sex`, `patient_dob`, `visit_type` | varchar | Patient and visit details |
+| `template_id` | varchar(64) | Note template used |
+| `note_status` | varchar(20) | Empty → `drafting` → `ready` or `failed` |
+| `note_error` | text | Why drafting failed |
+| `model` | varchar(120) | AI model that drafted the note |
+| `draft_note` | jsonb | AI draft; every line cites transcript segments |
+| `draft_seconds` | float | How long drafting took |
+| `drafted_at` | timestamptz | |
+| `final_note` | jsonb | Note as signed by the clinician |
+| `approved_at` | timestamptz | Set when signed |
+| `codes` | jsonb | Suggested ICD-10 codes |
+| `tasks` | jsonb | Follow-up task list |
+| `lines_drafted`, `lines_kept`, `lines_added`, `lines_removed` | integer | Edit counts at sign-off (kept for metrics) |
+| `content_purged_at` | timestamptz | When the retention job erased transcript, notes and patient details |
+
+**`appointments`**
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | integer | Primary key |
+| `patient_name` | varchar(120) | |
+| `reason` | varchar(255) | Reason for the visit |
+| `start_time` | timestamptz | Appointment time |
+| `canceled` | boolean | |
+| `call_id` | varchar(64) | VAPI call that made the booking |
+| `transcript` | text | End-of-call transcript |
+| `created_at` | timestamptz | |
+
+</details>
+
+To browse the data in pgAdmin: **Databases → hospital_ai → Schemas → public → Tables**, right-click a table →
+**View/Edit Data → All Rows**.
+
 ## Governance built in
 
 | Control | How |
@@ -103,7 +225,7 @@ values in `frontend/src/lib/theme.ts` (used by charts). Every page follows.
 ## Before real patients
 
 This is pilot-ready software, not a cleared deployment. Before any real patient data: data processing agreements
-(Anthropic, Deepgram, VAPI and its model providers) and data residency; hosting inside the hospital network behind
+(Anthropic or Groq, Deepgram, VAPI and its model providers) and data residency; hosting inside the hospital network behind
 HTTPS (`SECURE_COOKIES=true`) with encrypted, backed-up PostgreSQL; hospital SSO; a clinical safety case signed off
 by the clinical safety officer; privacy impact assessment and patient notice/consent for recording; a measured pilot
 and accuracy audit. The **Call Costs** page shows sample numbers until VAPI call data is connected.
