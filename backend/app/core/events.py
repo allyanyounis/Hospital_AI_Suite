@@ -1,4 +1,4 @@
-"""Live dashboard updates: a tiny pub/sub over WebSocket so open pages refresh when a call books or cancels."""
+"""Live dashboard updates: a tiny pub/sub over WebSocket so open pages refresh when data changes (any module)."""
 
 import logging
 

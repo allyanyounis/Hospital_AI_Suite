@@ -1,40 +1,8 @@
 /** Derived numbers and helpers for appointments (dashboard, appointments board, voice agent). */
 
 import type { Closure } from "@/features/schedule";
-import { dayOffset, nextDays, startOfDay, toDateKey } from "@/shared/lib/format";
+import { dayOffset, nextDays, toDateKey } from "@/shared/lib/format";
 import type { Appointment } from "./types";
-
-const DAY_MS = 86_400_000;
-
-export type Trend = { current: number; previous: number; percent: number | null };
-
-const trend = (current: number, previous: number): Trend => ({
-  current,
-  previous,
-  percent: previous > 0 ? Math.round(((current - previous) / previous) * 100) : null,
-});
-
-const bookedBetween = (list: Appointment[], from: Date, to: Date) =>
-  list.filter((a) => {
-    const created = new Date(a.created_at);
-    return created >= from && created < to;
-  }).length;
-
-/** Bookings made today vs yesterday. */
-export function dayTrend(list: Appointment[]): Trend {
-  const today = startOfDay(new Date());
-  return trend(
-    bookedBetween(list, today, new Date(today.getTime() + DAY_MS)),
-    bookedBetween(list, new Date(today.getTime() - DAY_MS), today),
-  );
-}
-
-/** Bookings made in the last 7 days vs the 7 before. */
-export function weekTrend(list: Appointment[]): Trend {
-  const end = new Date(startOfDay(new Date()).getTime() + DAY_MS);
-  const weekAgo = new Date(end.getTime() - 7 * DAY_MS);
-  return trend(bookedBetween(list, weekAgo, end), bookedBetween(list, new Date(end.getTime() - 14 * DAY_MS), weekAgo));
-}
 
 export const isUpcoming = (a: Appointment, now = new Date()) => !a.canceled && new Date(a.start_time) >= now;
 
