@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  quickcare-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: quickcare_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-quickcare_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-quickcare_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quickcare_secure_local_pass}
+    ports:
+      # Strictly bound to loopback 127.0.0.1 for host security
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - quickcare_pgdata:/var/lib/postgresql/data
+
+volumes:
+  quickcare_pgdata:
+

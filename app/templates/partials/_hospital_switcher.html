@@ -1,0 +1,35 @@
+{% if active_hospitals is iterable and active_hospitals is not string and active_hospitals|length > 0 %}
+<div class="dropdown d-inline-block me-2" id="tenant-hospital-switcher">
+  <button class="btn btn-sm btn-outline-primary dropdown-toggle d-flex align-items-center gap-2 shadow-sm rounded-pill px-3 py-1" type="button" id="hospitalSwitcherDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Active Aramis Health Hospital Tenant">
+    <i class="fas fa-hospital text-primary"></i>
+    <span class="d-none d-md-inline fw-semibold" style="font-size: 0.85rem;">
+      {% if current_hospital %}
+        {{ current_hospital.name }}
+      {% else %}
+        All Hospitals
+      {% endif %}
+    </span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="hospitalSwitcherDropdown" style="min-width: 270px; border-radius: 10px;">
+    <li class="px-3 py-2 border-bottom bg-light rounded-top">
+      <div class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem; letter-spacing: 0.5px;">Aramis Health Network</div>
+      <div class="small text-muted">Select active hospital tenant:</div>
+    </li>
+    {% for hosp in active_hospitals %}
+    <li>
+      <a class="dropdown-item d-flex align-items-center justify-content-between py-2 px-3 {% if current_hospital_id == hosp.id %}active bg-primary text-white{% endif %}" href="?switch_hospital_id={{ hosp.id }}">
+        <div>
+          <div class="fw-semibold" style="font-size: 0.88rem;">{{ hosp.name }}</div>
+          <div class="small {% if current_hospital_id == hosp.id %}text-white-50{% else %}text-muted{% endif %}">
+            <i class="fas fa-map-marker-alt me-1"></i>{{ hosp.city }}
+          </div>
+        </div>
+        {% if current_hospital_id == hosp.id %}
+          <i class="fas fa-check-circle fs-6"></i>
+        {% endif %}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

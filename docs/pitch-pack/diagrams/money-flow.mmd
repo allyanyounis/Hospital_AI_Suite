@@ -1,0 +1,14 @@
+flowchart TD
+    A["Patient Pays Consultation Fee<br/><small>EasyPaisa, JazzCash, or Card</small>"] --> B["Platform Holds Payment Safely<br/><small>Held in escrow until appointment</small>"]
+    B --> C{"Visit Completed?"}
+    C -- "Yes (Completed)" --> D["Doctor Receives 80%<br/><small>Direct payout to bank or wallet</small>"]
+    C -- "Yes (Completed)" --> E["Quick Care Retains 20%<br/><small>Platform operational revenue</small>"]
+    C -- "Cancelled (Eligible)" --> F["Patient Receives Refund<br/><small>Seamless automated refund</small>"]
+
+    style A fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+    style B fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
+    style C fill:#f0fdf4,stroke:#059669,stroke-width:2px,color:#064e3b
+    style D fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+    style E fill:#d1fae5,stroke:#059669,stroke-width:2px,color:#064e3b
+    style F fill:#fef2f2,stroke:#ef4444,stroke-width:2px,color:#991b1b
+

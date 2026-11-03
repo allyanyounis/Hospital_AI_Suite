@@ -1,0 +1,14 @@
+flowchart TD
+    A["Patient Asks Question<br/><small>English, Urdu, or Roman Urdu</small>"] --> B{"Emergency Safety Check"}
+    B -- "Life Threat / Emergency" --> C["Immediate Rescue 1122 Guidance<br/><small>Urgent emergency helpline & ER alert</small>"]
+    B -- "Health or Platform Query" --> D["Knowledge Search<br/><small>Platform FAQs, health info & live doctor slots</small>"]
+    D --> E["Clear, Friendly Response<br/><small>Plain-language guidance with sources</small>"]
+    E --> F["Doctor Recommendation<br/><small>1-click booking for the right specialist</small>"]
+
+    style A fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+    style B fill:#f0fdf4,stroke:#059669,stroke-width:2px,color:#064e3b
+    style C fill:#fef2f2,stroke:#ef4444,stroke-width:2px,color:#991b1b
+    style D fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+    style E fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
+    style F fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+

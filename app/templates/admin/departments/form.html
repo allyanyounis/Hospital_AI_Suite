@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}{% if department %}Edit Department - {{ department.name }}{% else %}Add Department{% endif %} - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 720px;">
+    <div class="mb-4">
+        <a href="{{ url_for('admin.departments') }}" class="text-decoration-none text-muted small">
+            <i class="fas fa-arrow-left me-1"></i>Back to Departments
+        </a>
+        <h2 class="fw-bold mt-2">
+            {% if department %}Edit Department: {{ department.name }}{% else %}Create Medical Department{% endif %}
+        </h2>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Department Name <span class="text-danger">*</span></label>
+                <input type="text" name="name" class="form-control" placeholder="e.g. Cardiology" 
+                       value="{{ department.name if department else '' }}" required>
+                <div class="form-text">Clinical department display title shown to patients and doctors.</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Slug (URL Identifier) <span class="text-danger">*</span></label>
+                <input type="text" name="slug" class="form-control" placeholder="e.g. cardiology" 
+                       value="{{ department.slug if department else '' }}" required>
+                <div class="form-text">URL-friendly slug (e.g. /patients/doctors/category/cardiology).</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">FontAwesome Icon Class</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="{{ department.icon if department else 'fas fa-user-md' }}" id="icon-preview"></i></span>
+                    <input type="text" name="icon" id="icon-input" class="form-control" placeholder="e.g. fas fa-heartbeat" 
+                           value="{{ department.icon if department else 'fas fa-user-md' }}">
+                </div>
+                <div class="form-text">FontAwesome 6 class string (e.g. fas fa-heartbeat, fas fa-brain).</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea name="description" class="form-control" rows="3" placeholder="Brief description of clinical specialties and care...">{{ department.description if department else '' }}</textarea>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Display Order</label>
+                    <input type="number" name="display_order" class="form-control" 
+                           value="{{ department.display_order if department else 0 }}">
+                    <div class="form-text">Lower numbers appear first on listings and navigation.</div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center mt-4">
+                    <div class="form-check form-switch fs-5">
+                        <input class="form-check-input" type="checkbox" name="is_active" id="isActiveSwitch" 
+                               {% if not department or department.is_active %}checked{% endif %}>
+                        <label class="form-check-label fs-6 fw-semibold" for="isActiveSwitch">Active & Visible</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{{ url_for('admin.departments') }}" class="btn btn-light px-4">Cancel</a>
+                <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                    <i class="fas fa-save me-1"></i>Save Department
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('icon-input').addEventListener('input', function(e) {
+        document.getElementById('icon-preview').className = e.target.value || 'fas fa-user-md';
+    });
+</script>
+{% endblock %}

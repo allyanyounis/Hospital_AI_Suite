@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}All Users - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 col-xl-2 mb-4 admin-sidebar-col">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px; z-index: 100;">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-bars me-2"></i>Navigation</h6>
+                </div>
+                <div class="card-body p-0">
+                    {% include 'admin/_management_sidebar.html' %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9 col-xl-10 admin-main-col">
+            <!-- Header Card -->
+            <div class="card shadow-sm border-0 mb-4 bg-primary text-white">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <h2 class="h3 mb-1 fw-bold text-white"><i class="fas fa-id-badge me-2"></i>User Management Directory</h2>
+                            <p class="mb-0 text-white-50">Filter, search, and manage accounts across patients, doctors, and staff (LegalMate pattern)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metric KPI Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6 col-md-3">
+                    <div class="card shadow-sm border-0 border-start border-primary border-4">
+                        <div class="card-body p-3">
+                            <div class="text-muted small fw-semibold text-uppercase">Total Users</div>
+                            <div class="fs-4 fw-bold text-dark">{{ stats.total }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="card shadow-sm border-0 border-start border-success border-4">
+                        <div class="card-body p-3">
+                            <div class="text-muted small fw-semibold text-uppercase">Active Accounts</div>
+                            <div class="fs-4 fw-bold text-success">{{ stats.active }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="card shadow-sm border-0 border-start border-info border-4">
+                        <div class="card-body p-3">
+                            <div class="text-muted small fw-semibold text-uppercase">Doctors</div>
+                            <div class="fs-4 fw-bold text-info">{{ stats.doctors }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="card shadow-sm border-0 border-start border-warning border-4">
+                        <div class="card-body p-3">
+                            <div class="text-muted small fw-semibold text-uppercase">Patients</div>
+                            <div class="fs-4 fw-bold text-warning">{{ stats.patients }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-3">
+                    <form method="GET" action="{{ url_for('admin.users') }}" class="row g-2 align-items-center">
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" name="q" class="form-control border-start-0" placeholder="Search name, email, phone..." value="{{ search_query }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="role" class="form-select">
+                                <option value="all" {% if role_filter == 'all' %}selected{% endif %}>All Roles</option>
+                                <option value="doctor" {% if role_filter == 'doctor' %}selected{% endif %}>Doctors</option>
+                                <option value="patient" {% if role_filter == 'patient' %}selected{% endif %}>Patients</option>
+                                <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>Admins</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="status" class="form-select">
+                                <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
+                                <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+                                <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive / Suspended</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="verification" class="form-select">
+                                <option value="all" {% if verification_filter == 'all' %}selected{% endif %}>All Verifications</option>
+                                <option value="verified" {% if verification_filter == 'verified' %}selected{% endif %}>Verified / Approved</option>
+                                <option value="pending" {% if verification_filter == 'pending' %}selected{% endif %}>Pending Verification</option>
+                                <option value="rejected" {% if verification_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary flex-grow-1"><i class="fas fa-filter me-1"></i>Filter</button>
+                            {% if search_query or role_filter != 'all' or status_filter != 'all' or verification_filter != 'all' %}
+                            <a href="{{ url_for('admin.users') }}" class="btn btn-outline-secondary" title="Clear Filters"><i class="fas fa-times"></i></a>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">User</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Verification</th>
+                                    <th>Joined</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if users %}
+                                    {% for u in users %}
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-light border text-primary fw-bold d-flex align-items-center justify-content-center me-3" style="width: 38px; height: 38px; font-size: 0.85rem;">
+                                                    {{ u.name[:2].upper() if u.name else 'U' }}
+                                                </div>
+                                                <div>
+                                                    <div class="fw-semibold text-dark">{{ u.name }}</div>
+                                                    <div class="text-muted small">{{ u.email }} {% if u.phone %}&bull; {{ u.phone }}{% endif %}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if u.role == 'doctor' %}
+                                                <span class="badge bg-info text-white"><i class="fas fa-user-md me-1"></i>Doctor</span>
+                                            {% elif u.role == 'patient' %}
+                                                <span class="badge bg-warning text-dark"><i class="fas fa-user me-1"></i>Patient</span>
+                                            {% elif u.role == 'admin' %}
+                                                <span class="badge bg-danger"><i class="fas fa-user-shield me-1"></i>Admin</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{{ u.role }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if u.is_active %}
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                                                    <i class="fas fa-check-circle me-1"></i>Active
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
+                                                    <i class="fas fa-ban me-1"></i>Inactive
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if u.role == 'doctor' and u.doctor_profile %}
+                                                {% if u.doctor_profile.is_approved %}
+                                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i>Approved</span>
+                                                {% elif u.doctor_profile.appeal_status == 'rejected' %}
+                                                    <span class="badge bg-danger"><i class="fas fa-times me-1"></i>Rejected</span>
+                                                {% elif u.doctor_profile.appeal_status == 'suspended' %}
+                                                    <span class="badge bg-dark"><i class="fas fa-pause me-1"></i>Suspended</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>Pending</span>
+                                                {% endif %}
+                                            {% elif u.role == 'patient' %}
+                                                <span class="badge bg-light text-muted border">Standard</span>
+                                            {% else %}
+                                                <span class="badge bg-light text-muted border">System</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-muted small">
+                                            {{ u.created_at.strftime('%Y-%m-%d') if u.created_at else '-' }}
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <div class="btn-group btn-group-sm">
+                                                {% if u.role == 'doctor' and u.doctor_profile %}
+                                                    <a href="{{ url_for('admin.view_doctor_details', doctor_id=u.doctor_profile.id) }}" class="btn btn-outline-primary" title="View Doctor Profile">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <form method="POST" action="{{ url_for('admin.toggle_doctor_status', doctor_id=u.doctor_profile.id) }}" class="d-inline" onsubmit="return confirm('Toggle status for this doctor?');">
+                                                        <button type="submit" class="btn btn-outline-{{ 'warning' if u.is_active else 'success' }}" title="{{ 'Deactivate' if u.is_active else 'Activate' }}">
+                                                            <i class="fas fa-{{ 'pause' if u.is_active else 'play' }}"></i>
+                                                        </button>
+                                                    </form>
+                                                {% elif u.role == 'patient' and u.patient_profile %}
+                                                    <a href="{{ url_for('admin.view_patient_details', patient_id=u.patient_profile.id) }}" class="btn btn-outline-primary" title="View Patient Activity">
+                                                        <i class="fas fa-chart-line"></i>
+                                                    </a>
+                                                    <form method="POST" action="{{ url_for('admin.toggle_patient_status', patient_id=u.patient_profile.id) }}" class="d-inline" onsubmit="return confirm('Toggle status for this patient?');">
+                                                        <button type="submit" class="btn btn-outline-{{ 'warning' if u.is_active else 'success' }}" title="{{ 'Deactivate' if u.is_active else 'Activate' }}">
+                                                            <i class="fas fa-{{ 'pause' if u.is_active else 'play' }}"></i>
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5 text-muted">
+                                            <i class="fas fa-users-slash fa-3x mb-3 text-secondary"></i>
+                                            <p class="mb-0">No users found matching current filters.</p>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                {% if pagination.pages > 1 %}
+                <div class="card-footer bg-white border-top d-flex justify-content-between align-items-center py-3">
+                    <span class="text-muted small">Showing page {{ pagination.page }} of {{ pagination.pages }} ({{ pagination.total }} total users)</span>
+                    <nav aria-label="Users pagination">
+                        <ul class="pagination pagination-sm mb-0">
+                            {% if pagination.has_prev %}
+                            <li class="page-item"><a class="page-link" href="{{ url_for('admin.users', page=pagination.prev_num, q=search_query, role=role_filter, status=status_filter, verification=verification_filter) }}">Previous</a></li>
+                            {% endif %}
+                            {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                {% if p %}
+                                    <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                                        <a class="page-link" href="{{ url_for('admin.users', page=p, q=search_query, role=role_filter, status=status_filter, verification=verification_filter) }}">{{ p }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if pagination.has_next %}
+                            <li class="page-item"><a class="page-link" href="{{ url_for('admin.users', page=pagination.next_num, q=search_query, role=role_filter, status=status_filter, verification=verification_filter) }}">Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

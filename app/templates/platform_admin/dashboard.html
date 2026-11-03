@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+
+{% block title %}Platform Super Admin Console — {{ brand_short_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-md-5">
+    <!-- Header Banner -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-3 border-bottom gap-3">
+        <div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-dark px-3 py-2 text-uppercase" style="letter-spacing: 0.5px; font-size: 0.75rem;">Aramis Health Global Executive</span>
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">BYPASSRLS Live</span>
+            </div>
+            <h1 class="h2 fw-bold text-dark mt-2 mb-1">Platform Super Admin Console</h1>
+            <p class="text-muted mb-0">Multi-hospital network supervision, tenant provisioning, and global compliance.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ url_for('platform_admin.new_hospital') }}" class="btn btn-primary px-3 py-2 shadow-sm d-flex align-items-center gap-2">
+                <i class="fas fa-plus-circle"></i>
+                <span class="fw-semibold">Provision New Hospital</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Platform Metric KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-primary border-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem; letter-spacing: 0.5px;">Hospital Tenants</div>
+                        <h2 class="display-6 fw-bold text-dark mb-0 mt-1">{{ total_hospitals }}</h2>
+                        <small class="text-success"><i class="fas fa-check-circle me-1"></i>{{ active_hospitals_count }} Active</small>
+                    </div>
+                    <div class="p-3 bg-primary-subtle text-primary rounded-circle">
+                        <i class="fas fa-hospital-alt fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-info border-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem; letter-spacing: 0.5px;">Global Doctors</div>
+                        <h2 class="display-6 fw-bold text-dark mb-0 mt-1">{{ total_doctors }}</h2>
+                        <small class="text-muted">Across all hospital branches</small>
+                    </div>
+                    <div class="p-3 bg-info-subtle text-info rounded-circle">
+                        <i class="fas fa-user-md fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-success border-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem; letter-spacing: 0.5px;">Total Consultations</div>
+                        <h2 class="display-6 fw-bold text-dark mb-0 mt-1">{{ total_appointments }}</h2>
+                        <small class="text-muted">Network-wide clinical visits</small>
+                    </div>
+                    <div class="p-3 bg-success-subtle text-success rounded-circle">
+                        <i class="fas fa-calendar-check fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-warning border-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem; letter-spacing: 0.5px;">Active Staff Memberships</div>
+                        <h2 class="display-6 fw-bold text-dark mb-0 mt-1">{{ total_memberships }}</h2>
+                        <small class="text-muted">Hierarchy roles provisioned</small>
+                    </div>
+                    <div class="p-3 bg-warning-subtle text-warning rounded-circle">
+                        <i class="fas fa-users-cog fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hospital Tenants List -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-building text-primary me-2"></i>Hospital Tenants</h5>
+            <span class="badge bg-secondary-subtle text-dark">{{ hospital_data|length }} Managed Facilities</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Hospital Name &amp; Location</th>
+                        <th>Slug</th>
+                        <th>Hospital Admin</th>
+                        <th class="text-center">Depts</th>
+                        <th class="text-center">Doctors</th>
+                        <th class="text-center">Appointments</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in hospital_data %}
+                    {% set h = item.hospital %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="fw-bold text-dark">{{ h.name }}</div>
+                            <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>{{ h.city }} &bull; {{ h.address }}</small>
+                        </td>
+                        <td><code>{{ h.slug }}</code></td>
+                        <td>
+                            {% if item.hospital_admin %}
+                                <div class="fw-semibold">{{ item.hospital_admin.name }}</div>
+                                <small class="text-muted">{{ item.hospital_admin.email }}</small>
+                            {% else %}
+                                <span class="badge bg-danger-subtle text-danger">Unassigned</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center"><span class="badge bg-light text-dark border">{{ item.department_count }}</span></td>
+                        <td class="text-center"><span class="badge bg-info-subtle text-info border">{{ item.doctor_count }}</span></td>
+                        <td class="text-center"><span class="badge bg-success-subtle text-success border">{{ item.appointment_count }}</span></td>
+                        <td>
+                            {% if h.status == 'active' %}
+                                <span class="badge bg-success text-white px-2 py-1"><i class="fas fa-check-circle me-1"></i>Active</span>
+                            {% else %}
+                                <span class="badge bg-danger text-white px-2 py-1"><i class="fas fa-ban me-1"></i>Suspended</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="d-inline-flex gap-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#adminModal{{ h.id }}" title="Assign Hospital Admin">
+                                    <i class="fas fa-user-shield me-1"></i>Admin
+                                </button>
+                                <form method="POST" action="{{ url_for('platform_admin.toggle_hospital_status', hospital_id=h.id) }}" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    {% if h.status == 'active' %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Suspend hospital tenant {{ h.name }}?')">
+                                            <i class="fas fa-ban me-1"></i>Suspend
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-sm btn-outline-success" onclick="return confirm('Activate hospital tenant {{ h.name }}?')">
+                                            <i class="fas fa-play me-1"></i>Activate
+                                        </button>
+                                    {% endif %}
+                                </form>
+                            </div>
+
+                            <!-- Modal to Onboard/Assign Hospital Admin -->
+                            <div class="modal fade text-start" id="adminModal{{ h.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content border-0 shadow">
+                                        <form method="POST" action="{{ url_for('platform_admin.onboard_hospital_admin', hospital_id=h.id) }}">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title fw-bold">Onboard Hospital Admin</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-4">
+                                                <p class="text-muted small mb-3">Assign executive tenant administrator for <strong>{{ h.name }}</strong> ({{ h.city }}).</p>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">Full Name</label>
+                                                    <input type="text" name="name" class="form-control" placeholder="Dr. Farooq Qureshi" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">Work Email</label>
+                                                    <input type="email" name="email" class="form-control" placeholder="admin@{{ h.slug }}.aramis.health" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">Phone Number</label>
+                                                    <input type="text" name="phone" class="form-control" placeholder="+923001234567" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">CNIC</label>
+                                                    <input type="text" name="cnic" class="form-control" placeholder="35201-1234567-1" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">Initial Password</label>
+                                                    <input type="password" name="password" class="form-control" value="Aramis2026!Sec#" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-primary">Save &amp; Assign</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Cross-Tenant Security Audit Log -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-bottom py-3 px-4">
+            <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-shield-alt text-dark me-2"></i>Recent Cross-Tenant Audit Logs</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle mb-0" style="font-size: 0.88rem;">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">ID</th>
+                        <th>Timestamp</th>
+                        <th>Hospital ID</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                        <th>IP Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for l in recent_logs %}
+                    <tr>
+                        <td class="ps-4">#{{ l.id }}</td>
+                        <td>{{ l.created_at.strftime('%Y-%m-%d %H:%M:%S') if l.created_at else 'N/A' }}</td>
+                        <td><span class="badge bg-light text-dark border">{{ l.hospital_id or 'Global' }}</span></td>
+                        <td><code>{{ l.action }}</code></td>
+                        <td>{{ l.details }}</td>
+                        <td><small class="text-muted">{{ l.ip_address or '127.0.0.1' }}</small></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-3 text-muted">No audit logs recorded yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{
+  "appointment_id": 13,
+  "patient": "Ahmed Raza (patient.ahmed@example.com)",
+  "doctor": "Dr. Tariq Mahmood (dr.tariq@example.com)",
+  "fee_pkr": 2500.0,
+  "timestamp": "2026-11-02T19:47:22.104657",
+  "journey_steps": [
+    {
+      "step": "Step 1: Booked Appointment",
+      "appointment_id": 13,
+      "file": "single_journey_step01_booked_appointment.png",
+      "url": "https://127.0.0.1:5000/appointments/13",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "655a9de0107058992bf9c9477a8eb11917fbb3a5ccbcddbcafec44b084390981",
+      "size_kb": 75.89453125
+    },
+    {
+      "step": "Step 2: Safepay Sandbox Checkout (Rs. 2,500.00)",
+      "appointment_id": 13,
+      "file": "safepay_checkout_rs2500.png",
+      "url": "https://sandbox.api.getsafepay.com/checkout/pay?env=sandbox&beacon=track_a53b7e10-b9a1-4fc3-b49d-cf1740cf5d9a&redirect_url=https://127.0.0.1:5000/safepay/return/13",
+      "title": "Safepay Checkout",
+      "heading": "Safepay Checkout",
+      "sha256": "1440010e435ff5652ee5597566cd9b3e6084f7d53878566629aa045c03126dbd",
+      "size_kb": 132.0556640625
+    },
+    {
+      "step": "Step 3: Appointment Payment Approved",
+      "appointment_id": 13,
+      "file": "appointment_payment_approved_rs2500.png",
+      "url": "https://127.0.0.1:5000/appointments/13",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "ed2d733162270ff71e1589f6c2651c6060e2df507cf9dc70901157ac612db8e9",
+      "size_kb": 75.8955078125
+    },
+    {
+      "step": "Step 4: Doctor Confirms Appointment",
+      "appointment_id": 13,
+      "file": "single_journey_step04_doctor_approved.png",
+      "url": "https://127.0.0.1:5000/doctors/appointments",
+      "title": "My Appointments - Quick Care Connect",
+      "heading": "My Appointments",
+      "sha256": "23fa2ca8b7f9e8752f0c50a8691ae9306cadceb52a80982d092000c32bbef0a3",
+      "size_kb": 137.5322265625
+    },
+    {
+      "step": "Step 5: Consultation Room Waiting Presence",
+      "appointment_id": 13,
+      "file": "single_journey_step05_consultation_waiting.png",
+      "url": "https://127.0.0.1:5000/appointments/13",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "5ae82e29894f960bcac20ac8cab084672f39d42798cb43041c1ae10adff5f9e4",
+      "size_kb": 67.416015625
+    },
+    {
+      "step": "Step 6: Voice Transcript Attached",
+      "appointment_id": 13,
+      "file": "single_journey_step06_transcript_attached.png",
+      "url": "https://127.0.0.1:5000/appointments/13",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "8c1f4d3cd92a35dfccd551bcb7c8899b00722736913a1b9a7e7f7fd283e1693d",
+      "size_kb": 74.6259765625
+    },
+    {
+      "step": "Step 7: Prescription Issued",
+      "appointment_id": 13,
+      "file": "single_journey_step07_prescription_issued.png",
+      "url": "https://127.0.0.1:5000/prescriptions/view/3",
+      "title": "Prescription #3 \u2014 Quick Care",
+      "heading": "Prescription #3 \u2014 Quick Care",
+      "sha256": "2dc92e9c6029a26387d39cfea7fab3792d1a6bd54f8635ed06d1226183e7d534",
+      "size_kb": 97.4345703125
+    },
+    {
+      "step": "Step 8: Consultation Completed & Review Submitted",
+      "appointment_id": 13,
+      "file": "single_journey_step08_review_submitted.png",
+      "url": "https://127.0.0.1:5000/appointments/13",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "b4009ba7dd6b2ba63af8c3a7d25dfe4ec65341e895b16c849a4e8ca1439a583e",
+      "size_kb": 81.93359375
+    }
+  ]
+}

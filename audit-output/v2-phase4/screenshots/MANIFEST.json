@@ -1,0 +1,242 @@
+{
+  "timestamp": "2026-11-02T18:23:27.620817",
+  "total_captures": 26,
+  "historical_collision_count": 0,
+  "intra_collision_count": 0,
+  "captures": [
+    {
+      "file": "01_find_doctors_departments.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\01_find_doctors_departments.png",
+      "final_url": "https://127.0.0.1:5000/patients/find-doctors",
+      "title": "Find Doctors - Quick Care Connect",
+      "heading": "Connect with Top Specialists",
+      "sha256": "48d5888fbf0cf868662540377d912365c66c96e22b310e80b310b8727e666681",
+      "size_kb": 208.0712890625
+    },
+    {
+      "file": "02_doctor_listing_approved_visibility.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\02_doctor_listing_approved_visibility.png",
+      "final_url": "https://127.0.0.1:5000/patients/doctors/category/cardiology",
+      "title": "Cardiology Doctors - Quick Care Connect",
+      "heading": "Cardiology Doctors In Pakistan",
+      "sha256": "33eb4f7011337815d166c6d2c898933bc151ce50654d5f95059a1b685ef08a2c",
+      "size_kb": 138.349609375
+    },
+    {
+      "file": "03_filters_multicriteria_active.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\03_filters_multicriteria_active.png",
+      "final_url": "https://127.0.0.1:5000/patients/doctors/category/cardiology?type=video&fee_range=1000_2000&gender=female",
+      "title": "Cardiology Doctors - Quick Care Connect",
+      "heading": "Cardiology Doctors In Pakistan",
+      "sha256": "81e2d845022b1714308edb9b9dd3f1a38c1cb496b93faad6ed28801b187cb438",
+      "size_kb": 156.455078125
+    },
+    {
+      "file": "04_filters_near_me_geolocation.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\04_filters_near_me_geolocation.png",
+      "final_url": "https://127.0.0.1:5000/patients/doctors/category/cardiology?sort=nearest&lat=31.5204&lng=74.3587",
+      "title": "Cardiology Doctors - Quick Care Connect",
+      "heading": "Cardiology Doctors In Pakistan",
+      "sha256": "cf9bf878c68b811d8adfa6cc5ae39116c640a74092afa892005911441bcab941",
+      "size_kb": 258.2314453125
+    },
+    {
+      "file": "05_admin_departments_management.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\05_admin_departments_management.png",
+      "final_url": "https://127.0.0.1:5000/admin/departments",
+      "title": "Manage Departments - Admin Panel",
+      "heading": "Medical Departments",
+      "sha256": "50cee10398e4af40d87737fed47aa73832db47a6fc8bf663375bdf84124a76f1",
+      "size_kb": 138.529296875
+    },
+    {
+      "file": "06_admin_new_department_form.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\06_admin_new_department_form.png",
+      "final_url": "https://127.0.0.1:5000/admin/departments/new",
+      "title": "Add Department - Admin Panel",
+      "heading": "Create Medical Department",
+      "sha256": "7010ed91502395da48be3cb456920e15a350266f74ce4f3e3faadc808cbdb064",
+      "size_kb": 78.4833984375
+    },
+    {
+      "file": "07_admin_patient_management_toggle.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\07_admin_patient_management_toggle.png",
+      "final_url": "https://127.0.0.1:5000/admin/patients",
+      "title": "Manage Patients - Admin Panel",
+      "heading": "Patient Management",
+      "sha256": "c343bb0393ab627e9c0c624976e8a74019457ea4f26b72b83e266d7840466789",
+      "size_kb": 263.2578125
+    },
+    {
+      "file": "08_admin_patient_details_view.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\08_admin_patient_details_view.png",
+      "final_url": "https://127.0.0.1:5000/admin/patients/1/details",
+      "title": "Patient Details - Ahmed Raza - Admin Panel",
+      "heading": "Ahmed Raza",
+      "sha256": "5c6c1f28d7ca7d0f97e19ae1f77382177b6bb8c8f29be558f2637fe25599ec14",
+      "size_kb": 98.6806640625
+    },
+    {
+      "file": "09_admin_doctors_management_toggle.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\09_admin_doctors_management_toggle.png",
+      "final_url": "https://127.0.0.1:5000/admin/doctors",
+      "title": "Manage Doctors - Admin Panel",
+      "heading": "Medical Staff Control",
+      "sha256": "bacace85969a79f09c04843ba9f0ef298dd6ab71107f39b19f4369843402dd5b",
+      "size_kb": 44.4462890625
+    },
+    {
+      "file": "10_video_transcription_dual_consent_ui.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\10_video_transcription_dual_consent_ui.png",
+      "final_url": "https://127.0.0.1:5000/appointments/1",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "44a237171ba08a9f4606609b4b996a15743cb9768545d6c9f7a3a06ff733ce33",
+      "size_kb": 30.345703125
+    },
+    {
+      "file": "11_appointment_voice_transcript_attached.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\11_appointment_voice_transcript_attached.png",
+      "final_url": "https://127.0.0.1:5000/appointments/1",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "02c6cf185e1bcc589215890e721ee0d18a425ae0b0a239416b38a58c45290a29",
+      "size_kb": 35.7998046875
+    },
+    {
+      "file": "12_doctor_schedule_physical_vs_online.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\12_doctor_schedule_physical_vs_online.png",
+      "final_url": "https://127.0.0.1:5000/doctors/appointment-settings",
+      "title": "Appointment Settings - Quick Care Connect",
+      "heading": "Appointment Settings",
+      "sha256": "1e1d747a57d365b23b708993d37f719795efc53b045a00987de753f0d104fe86",
+      "size_kb": 141.837890625
+    },
+    {
+      "file": "13_admin_users_directory.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\13_admin_users_directory.png",
+      "final_url": "https://127.0.0.1:5000/admin/users",
+      "title": "All Users - Admin Panel",
+      "heading": "User Management Directory",
+      "sha256": "e14bae1a1649ec662c6844f4aa746e6b9ba85729ac5e4882d6f943a02338339a",
+      "size_kb": 24.833984375
+    },
+    {
+      "file": "14_admin_audit_logs.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\screenshots\\14_admin_audit_logs.png",
+      "final_url": "https://127.0.0.1:5000/admin/audit-logs",
+      "title": "Admin Audit Logs - Admin Panel",
+      "heading": "Administrative Audit Logs",
+      "sha256": "20abfe695e8aa3773e626525707391b8cdc043e8b3191817bf8e1a34d45df1af",
+      "size_kb": 24.833984375
+    },
+    {
+      "file": "step01_doctor_registration_page.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step01_doctor_registration_page.png",
+      "final_url": "https://127.0.0.1:5000/auth/register",
+      "title": "Register - Quick Care Connect",
+      "heading": "Create Your Account",
+      "sha256": "d829860620b15d326b3cda1035b075739a6f11803b740ec62492d26079207ebd",
+      "size_kb": 19.095703125
+    },
+    {
+      "file": "step02_admin_doctor_verification_approval.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step02_admin_doctor_verification_approval.png",
+      "final_url": "https://127.0.0.1:5000/admin/doctors",
+      "title": "Manage Doctors - Admin Panel",
+      "heading": "Medical Staff Control",
+      "sha256": "fd405b73072243a8fe881af88931e184552abb3f6b676e04974508bf8006d74e",
+      "size_kb": 22.7294921875
+    },
+    {
+      "file": "step03_doctor_listed_in_department.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step03_doctor_listed_in_department.png",
+      "final_url": "https://127.0.0.1:5000/patients/doctors/category/cardiology",
+      "title": "Cardiology Doctors - Quick Care Connect",
+      "heading": "Cardiology Doctors In Pakistan",
+      "sha256": "8e3f8628d837033d4403fda236ca8cb6836f43b1a286d8cd4d7a01ab6c702de2",
+      "size_kb": 18.3984375
+    },
+    {
+      "file": "step04_patient_near_me_geolocation_results.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step04_patient_near_me_geolocation_results.png",
+      "final_url": "https://127.0.0.1:5000/patients/doctors/category/cardiology?sort=nearest&lat=31.5204&lng=74.3587",
+      "title": "Cardiology Doctors - Quick Care Connect",
+      "heading": "Cardiology Doctors In Pakistan",
+      "sha256": "96b4aac78c721325a1a6b7233220dac50462c2b4d549c101153f30ac1fce6d3b",
+      "size_kb": 23.2041015625
+    },
+    {
+      "file": "step05_patient_booking_consultation_form.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step05_patient_booking_consultation_form.png",
+      "final_url": "https://127.0.0.1:5000/patients/doctor/1/book?type=video&practice=Video%20Consultation",
+      "title": "Book Appointment with Dr. Tariq Mahmood - Quick Care Connect",
+      "heading": "Get Confirmed Appointment Online",
+      "sha256": "21a98b86ad940c46a802ec097deeae71b7237e98b623bd00eca9be73c7662d1b",
+      "size_kb": 23.21484375
+    },
+    {
+      "file": "step06_patient_payment_under_review.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step06_patient_payment_under_review.png",
+      "final_url": "https://127.0.0.1:5000/appointments/3",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "4f0a9b7bc1cb33f168f33613f787ff29b3da0e9d6b7bee9fbb711deee9afb302",
+      "size_kb": 29.5185546875
+    },
+    {
+      "file": "step07_admin_payment_verification_console.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step07_admin_payment_verification_console.png",
+      "final_url": "https://127.0.0.1:5000/admin/payments",
+      "title": "Payment Approvals - Quick Care Connect",
+      "heading": "Payment Approvals",
+      "sha256": "c3a09c5f250da83768b6bffe1b6e53a243a20a5ead4c47be7095e2f480935837",
+      "size_kb": 21.5107421875
+    },
+    {
+      "file": "step08_doctor_appointments_management.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step08_doctor_appointments_management.png",
+      "final_url": "https://127.0.0.1:5000/doctors/appointments",
+      "title": "My Appointments - Quick Care Connect",
+      "heading": "My Appointments",
+      "sha256": "f8c62f73902003e26cd8938568f366b2c4ba09bdd8fdf40cb4346e75a5c51c07",
+      "size_kb": 20.138671875
+    },
+    {
+      "file": "step09_consultation_room_waiting_presence.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step09_consultation_room_waiting_presence.png",
+      "final_url": "https://127.0.0.1:5000/appointments/1",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "0e7d5755e2ac74a9a525dbbe721a1aac069c72e9d0dc6f1fca89771092576bc5",
+      "size_kb": 27.56640625
+    },
+    {
+      "file": "step10_clinical_voice_transcript_attached.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step10_clinical_voice_transcript_attached.png",
+      "final_url": "https://127.0.0.1:5000/appointments/1",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "e5b2c0ae31798335aeb8f65a35e905a1dc1a5af7117c5259aead7a6030935ad7",
+      "size_kb": 26.4677734375
+    },
+    {
+      "file": "step11_clinical_prescription_issued.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step11_clinical_prescription_issued.png",
+      "final_url": "https://127.0.0.1:5000/prescriptions/view/1",
+      "title": "Prescription #1 \u2014 Quick Care",
+      "heading": "Prescription #1 \u2014 Quick Care",
+      "sha256": "e86df6a713f224e7b3b15cd2cb026a5e677ab2d8dacc8e4ef09bad741ca76dfc",
+      "size_kb": 23.1259765625
+    },
+    {
+      "file": "step12_post_consultation_review_rating_prompt.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\journey\\step12_post_consultation_review_rating_prompt.png",
+      "final_url": "https://127.0.0.1:5000/appointments/2",
+      "title": "Appointment Details - Quick Care Connect",
+      "heading": "Appointment Details",
+      "sha256": "e4a0a3b180521016ace28e448d5dc98013a358beb9ad2369fdd25487b844c810",
+      "size_kb": 28.568359375
+    }
+  ]
+}

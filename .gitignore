@@ -1,0 +1,98 @@
+# =============================================================================
+# Git Ignore Configuration - Aramis AI Healthcare Solutions
+# =============================================================================
+
+# --- Environment & Secret Configuration ---
+.env
+.env.*
+!.env.example
+
+# --- Python Runtime & Bytecode ---
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# --- Testing & Type Checking Caches ---
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- Machine Learning / Whisper Model Caches ---
+whisper/
+models/
+.cache/
+*whisper*cache*
+*.pt
+*.bin
+*.onnx
+
+# --- Browser Automation & Profiles ---
+edge_prof*/
+chrome_prof*/
+playwright_profiles/
+*.dump
+test-results/
+
+# --- Instance, Local Databases & Uploads ---
+instance/
+instance/*
+!instance/.gitkeep
+!instance/private_uploads/.gitkeep
+!instance/private_uploads/*/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+
+# --- User Runtime Uploads & Generated Prescriptions ---
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+!app/static/uploads/*/.gitkeep
+app/static/prescriptions/*
+!app/static/prescriptions/.gitkeep
+
+# --- Node / Package Artifacts ---
+node_modules/
+package.json
+package-lock.json
+
+# --- Certificates, Private Keys & Credentials ---
+*.pem
+*.key
+*.crt
+*.pfx
+*.cer
+DEMO_CREDENTIALS.md
+
+# --- Logs & Runtime Output ---
+logs/
+*.log
+*.pid
+
+# --- Audit Binaries & Raw Dumps (keep only .md reports and .json manifests) ---
+audit-output/**/*.png
+audit-output/**/*.jpg
+audit-output/**/*.jpeg
+audit-output/**/*.gif
+audit-output/**/*.wav
+audit-output/**/*.mp3
+audit-output/**/*.mp4
+audit-output/**/*.txt
+audit-output/**/*.html
+audit-output/**/screenshots/*.png
+audit-output/**/journey/*.png
+audit-output/**/audit_evidence/screenshots/*.png
+docs/pitch-pack/screenshots/
+docs/pitch-pack/diagrams/*.png
+
+# --- OS & Editor Specific ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo

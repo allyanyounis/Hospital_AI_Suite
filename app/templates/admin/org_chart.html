@@ -1,0 +1,301 @@
+{% extends 'base.html' %}
+
+{% block title %}Hospital Staff Hierarchy &amp; Org Chart — {{ brand_short_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-md-5">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-3 border-bottom gap-3">
+        <div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary px-3 py-1 text-uppercase" style="letter-spacing: 0.5px; font-size: 0.75rem;">Hospital Tenant #{{ hospital.id }}</span>
+                <span class="badge bg-light text-dark border"><i class="fas fa-map-marker-alt text-primary me-1"></i>{{ hospital.city }}</span>
+            </div>
+            <h1 class="h2 fw-bold text-dark mt-2 mb-1">{{ hospital.name }} — Organizational Hierarchy</h1>
+            <p class="text-muted mb-0">Role hierarchy, reporting lines, and anti-privilege escalation staff management.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ url_for('admin.department_staff') }}" class="btn btn-outline-primary px-3 py-2 shadow-sm">
+                <i class="fas fa-sitemap me-1"></i>Department Staff View
+            </a>
+            <button type="button" class="btn btn-primary px-3 py-2 shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#assignRoleModal">
+                <i class="fas fa-user-plus"></i>
+                <span class="fw-semibold">Assign / Promote Staff</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Visual Org Chart Tree Container -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4 p-4 bg-light overflow-auto">
+        <h5 class="fw-bold text-dark mb-4 text-center">
+            <i class="fas fa-network-wired text-primary me-2"></i>Staff Reporting Tree
+        </h5>
+
+        <div class="d-flex flex-column align-items-center gap-4" style="min-width: 900px;">
+            <!-- LEVEL 1: HOSPITAL ADMIN -->
+            <div class="text-center">
+                <div class="text-uppercase text-muted fw-bold mb-2" style="font-size: 0.72rem; letter-spacing: 1px;">Level 1 &bull; Tenant Executive</div>
+                {% for m in level1_admins %}
+                <div class="card border-0 shadow rounded-4 p-3 bg-white text-start d-inline-block border-top border-4 border-primary" style="width: 290px;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="p-3 bg-primary-subtle text-primary rounded-circle">
+                            <i class="fas fa-hospital-user fa-lg"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold text-dark mb-0">{{ m.user.name }}</div>
+                            <small class="text-muted d-block">{{ m.user.email }}</small>
+                            <span class="badge bg-primary text-white mt-1">Hospital Admin</span>
+                        </div>
+                        <div>
+                            {% if m.status == 'active' %}
+                                <i class="fas fa-check-circle text-success" title="Active"></i>
+                            {% else %}
+                                <i class="fas fa-ban text-danger" title="Suspended"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-warning py-2 px-3 small d-inline-block">No Hospital Admin assigned.</div>
+                {% endfor %}
+            </div>
+
+            <!-- Connector Down -->
+            <div class="border-start border-2 border-secondary" style="height: 25px;"></div>
+
+            <!-- LEVEL 2: MANAGERS -->
+            <div class="text-center w-100">
+                <div class="text-uppercase text-muted fw-bold mb-2" style="font-size: 0.72rem; letter-spacing: 1px;">Level 2 &bull; Operational &amp; Clinical Leadership</div>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    {% for m in level2_managers %}
+                    {% set role_color = 'success' if m.role == 'medical_director' else ('warning' if m.role == 'operations_manager' else ('info' if m.role == 'finance_manager' else 'secondary')) %}
+                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-start border-top border-3 border-{{ role_color }}" style="width: 240px;">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="fas {% if m.role == 'medical_director' %}fa-user-md text-success{% elif m.role == 'operations_manager' %}fa-cogs text-warning{% elif m.role == 'finance_manager' %}fa-file-invoice-dollar text-info{% else %}fa-user-tie text-secondary{% endif %}"></i>
+                            <span class="badge bg-{{ role_color }}-subtle text-{{ role_color }} fw-semibold" style="font-size: 0.72rem;">
+                                {{ m.role|replace('_', ' ')|title }}
+                            </span>
+                        </div>
+                        <div class="fw-bold text-dark" style="font-size: 0.9rem;">{{ m.user.name }}</div>
+                        <small class="text-muted d-block mb-2">{{ m.user.email }}</small>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <small class="text-muted">Reports to: HA</small>
+                            <form method="POST" action="{{ url_for('admin.toggle_membership_status', membership_id=m.id) }}" class="d-inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-link p-0 text-{{ 'danger' if m.status == 'active' else 'success' }}" title="Toggle Status">
+                                    <i class="fas fa-power-off"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Connector Down -->
+            <div class="border-start border-2 border-secondary" style="height: 25px;"></div>
+
+            <!-- LEVEL 3: DEPARTMENT HODs -->
+            <div class="text-center w-100">
+                <div class="text-uppercase text-muted fw-bold mb-2" style="font-size: 0.72rem; letter-spacing: 1px;">Level 3 &bull; Department Heads (HODs)</div>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    {% for m in level3_hods %}
+                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-start border-top border-3 border-primary" style="width: 240px;">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="badge bg-primary-subtle text-primary fw-semibold" style="font-size: 0.72rem;">Head of Department</span>
+                            <span class="badge bg-light text-dark border">{{ m.department.name if m.department else 'General' }}</span>
+                        </div>
+                        <div class="fw-bold text-dark" style="font-size: 0.9rem;">{{ m.user.name }}</div>
+                        <small class="text-muted d-block mb-2">{{ m.user.email }}</small>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <small class="text-muted"><i class="fas fa-stethoscope me-1 text-primary"></i>Clinical Scope</small>
+                            <form method="POST" action="{{ url_for('admin.toggle_membership_status', membership_id=m.id) }}" class="d-inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-link p-0 text-{{ 'danger' if m.status == 'active' else 'success' }}">
+                                    <i class="fas fa-power-off"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-light border py-2 px-3 small">No Department HODs assigned yet.</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Connector Down -->
+            <div class="border-start border-2 border-secondary" style="height: 25px;"></div>
+
+            <!-- LEVEL 4: STAFF (DOCTORS, NURSES, OPERATIONS, FINANCE) -->
+            <div class="text-center w-100">
+                <div class="text-uppercase text-muted fw-bold mb-2" style="font-size: 0.72rem; letter-spacing: 1px;">Level 4 &bull; Clinical &amp; Operational Staff</div>
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    {% for m in level4_staff %}
+                    {% set badge_color = 'success' if m.role == 'doctor' else ('info' if m.role == 'nurse' else ('dark' if m.role == 'accountant' else 'secondary')) %}
+                    <div class="card border-0 shadow-sm rounded-3 p-2 bg-white text-start" style="width: 190px; font-size: 0.82rem;">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="badge bg-{{ badge_color }}-subtle text-{{ badge_color }}">{{ m.role|replace('_', ' ')|title }}</span>
+                            {% if m.status == 'active' %}
+                                <i class="fas fa-circle text-success" style="font-size: 0.5rem;" title="Active"></i>
+                            {% else %}
+                                <i class="fas fa-circle text-danger" style="font-size: 0.5rem;" title="Suspended"></i>
+                            {% endif %}
+                        </div>
+                        <div class="fw-semibold text-truncate text-dark">{{ m.user.name }}</div>
+                        <small class="text-muted d-block text-truncate">{{ m.department.name if m.department else 'General' }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complete Memberships Table with Scoped Actions -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-users-cog text-primary me-2"></i>Hospital Staff Directory</h5>
+            <span class="badge bg-light text-dark border">{{ all_memberships|length }} Active &amp; Suspended Memberships</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Staff Member</th>
+                        <th>Hierarchy Role</th>
+                        <th>Department</th>
+                        <th>Reporting Line</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in all_memberships %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="fw-bold text-dark">{{ m.user.name }}</div>
+                            <small class="text-muted">{{ m.user.email }} &bull; {{ m.user.phone or 'No phone' }}</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border px-2 py-1 fw-semibold">
+                                {{ m.role|replace('_', ' ')|title }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if m.department %}
+                                <span class="badge bg-primary-subtle text-primary">{{ m.department.name }}</span>
+                            {% else %}
+                                <span class="text-muted small">&mdash;</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if m.reports_to %}
+                                <small class="text-muted">Reports to: <strong>{{ m.reports_to.user.name }}</strong> ({{ m.reports_to.role|replace('_', ' ')|title }})</small>
+                            {% else %}
+                                <small class="text-muted">Independent / Top Executive</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if m.status == 'active' %}
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Suspended</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <form method="POST" action="{{ url_for('admin.toggle_membership_status', membership_id=m.id) }}" class="d-inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                {% if m.status == 'active' %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Suspend membership for {{ m.user.name }}?')">
+                                        <i class="fas fa-user-slash me-1"></i>Suspend
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-sm btn-outline-success" onclick="return confirm('Reactivate membership for {{ m.user.name }}?')">
+                                        <i class="fas fa-user-check me-1"></i>Reactivate
+                                    </button>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Assign / Promote Role Modal -->
+<div class="modal fade" id="assignRoleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <form method="POST" action="{{ url_for('admin.assign_staff_role') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Assign Hospital Staff Role</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Select User</label>
+                        <select name="user_id" class="form-select" required>
+                            <option value="">-- Choose User --</option>
+                            {% for u in all_users %}
+                            <option value="{{ u.id }}">{{ u.name }} ({{ u.email }}) [{{ u.role }}]</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Role to Assign</label>
+                        <select name="role" class="form-select" required>
+                            <option value="">-- Select Role --</option>
+                            <optgroup label="Level 2 Managers">
+                                <option value="medical_director">Medical Director (Clinical)</option>
+                                <option value="operations_manager">Operations Manager (Operations)</option>
+                                <option value="finance_manager">Finance Manager (Finance)</option>
+                                <option value="hr_it_manager">HR / IT Manager (Administration)</option>
+                            </optgroup>
+                            <optgroup label="Level 3 Clinical HOD">
+                                <option value="hod">Department Head (HOD)</option>
+                            </optgroup>
+                            <optgroup label="Level 4 Clinical &amp; Operations Staff">
+                                <option value="doctor">Attending Doctor</option>
+                                <option value="nurse">Clinical Nurse</option>
+                                <option value="ot_coordinator">OT Coordinator</option>
+                                <option value="front_desk">Front Desk Receptionist</option>
+                                <option value="accountant">Hospital Accountant (Finance Only)</option>
+                                <option value="staff_compliance">Staff Compliance Officer</option>
+                            </optgroup>
+                        </select>
+                        <div class="form-text small">Anti-privilege escalation rule: You can only assign roles strictly ranked below your level.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Department (Optional for managers/general staff)</label>
+                        <select name="department_id" class="form-select">
+                            <option value="">-- No Department (Hospital Wide) --</option>
+                            {% for d in departments %}
+                            <option value="{{ d.id }}">{{ d.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Direct Supervisor (Optional)</label>
+                        <select name="reports_to_membership_id" class="form-select">
+                            <option value="">-- None / Top Executive --</option>
+                            {% for m in all_memberships %}
+                            <option value="{{ m.id }}">{{ m.user.name }} ({{ m.role|replace('_', ' ')|title }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Assign Role</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

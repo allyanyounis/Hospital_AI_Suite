@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Details - {{ user.name }} - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="mb-4">
+        <a href="{{ url_for('admin.patients') }}" class="text-decoration-none text-muted small">
+            <i class="fas fa-arrow-left me-1"></i>Back to Patients List
+        </a>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+            <div class="d-flex align-items-center">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold fs-4" style="width: 56px; height: 56px;">
+                    {{ user.name[0].upper() }}
+                </div>
+                <div>
+                    <h2 class="fw-bold mb-0">{{ user.name }}</h2>
+                    <div class="text-muted small">Member since {{ user.created_at.strftime('%b %d, %Y') }}</div>
+                </div>
+            </div>
+            <div>
+                <form method="POST" action="{{ url_for('admin.toggle_patient_status', patient_id=patient.id) }}" class="d-inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn {% if user.is_active %}btn-outline-danger{% else %}btn-success{% endif %} fw-semibold">
+                        <i class="fas {% if user.is_active %}fa-user-slash{% else %}fa-user-check{% endif %} me-2"></i>
+                        {% if user.is_active %}Deactivate Account{% else %}Activate Account{% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 bg-white rounded-3">
+                <div class="text-muted small">Account Status</div>
+                <div class="mt-1">
+                    {% if user.is_active %}
+                    <span class="badge bg-success-subtle text-success fs-6 px-3 py-1 rounded-pill">Active</span>
+                    {% else %}
+                    <span class="badge bg-danger-subtle text-danger fs-6 px-3 py-1 rounded-pill">Deactivated</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 bg-white rounded-3">
+                <div class="text-muted small">Total Appointments</div>
+                <h4 class="fw-bold mb-0 mt-1">{{ appointments|length }}</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 bg-white rounded-3">
+                <div class="text-muted small">Completed Consults</div>
+                <h4 class="fw-bold mb-0 mt-1 text-primary">
+                    {{ appointments|selectattr('status', 'equalto', 'completed')|list|length }}
+                </h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 bg-white rounded-3">
+                <div class="text-muted small">Total Spending (Paid)</div>
+                <h4 class="fw-bold mb-0 mt-1 text-success">PKR {{ "%.0f"|format(total_spent) }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Details & Appointments Tabs -->
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
+                <h5 class="fw-bold mb-3"><i class="fas fa-id-card text-primary me-2"></i>Personal Info</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><span class="text-muted small d-block">Email</span><strong>{{ user.email }}</strong></li>
+                    <li class="mb-2"><span class="text-muted small d-block">Phone</span><strong>{{ user.phone or 'Not provided' }}</strong></li>
+                    <li class="mb-2"><span class="text-muted small d-block">CNIC</span><strong>{{ user.cnic or 'Not provided' }}</strong></li>
+                    <li class="mb-2"><span class="text-muted small d-block">Gender</span><strong>{{ (user.gender or 'Not specified')|title }}</strong></li>
+                    <li class="mb-2"><span class="text-muted small d-block">Blood Group</span><strong>{{ patient.blood_group or 'Not recorded' }}</strong></li>
+                    <li class="mb-2"><span class="text-muted small d-block">Emergency Contact</span><strong>{{ patient.emergency_contact or 'None' }} ({{ patient.emergency_relation or 'N/A' }})</strong></li>
+                </ul>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
+                <h5 class="fw-bold mb-3"><i class="fas fa-file-medical text-primary me-2"></i>Medical Vault</h5>
+                <div>
+                    <div class="text-muted small">Uploaded Medical Documents</div>
+                    <strong>{{ patient.medical_documents|length }} documents on file</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-3 bg-white overflow-hidden">
+                <div class="p-3 border-bottom bg-light">
+                    <h5 class="fw-bold mb-0"><i class="fas fa-calendar-check text-primary me-2"></i>Appointment History</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Doctor</th>
+                                <th>Date & Time</th>
+                                <th>Type</th>
+                                <th>Fee</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appt in appointments %}
+                            <tr>
+                                <td>#{{ appt.id }}</td>
+                                <td>
+                                    <div class="fw-semibold">{{ appt.doctor.user.name }}</div>
+                                    <div class="text-muted small">{{ appt.doctor.category }}</div>
+                                </td>
+                                <td>
+                                    <div>{{ appt.appointment_date.strftime('%b %d, %Y') }}</div>
+                                    <div class="text-muted small">{{ appt.appointment_time.strftime('%I:%M %p') }}</div>
+                                </td>
+                                <td>
+                                    <span class="badge {% if appt.appointment_type == 'video' %}bg-info-subtle text-info{% else %}bg-primary-subtle text-primary{% endif %} px-2 py-1 rounded-pill">
+                                        {{ appt.appointment_type|title }}
+                                    </span>
+                                </td>
+                                <td class="fw-semibold">PKR {{ "%.0f"|format(appt.charges or 0) }}</td>
+                                <td>
+                                    <span class="badge {% if appt.status == 'completed' %}bg-success-subtle text-success{% elif appt.status == 'approved' %}bg-primary-subtle text-primary{% else %}bg-secondary-subtle text-secondary{% endif %} px-2 py-1 rounded-pill">
+                                        {{ appt.status|title }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">No appointments recorded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

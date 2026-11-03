@@ -1,0 +1,237 @@
+{
+  "executed_at": "2026-11-02T14:55:24.874673",
+  "database": "PostgreSQL 16.15 (pgvector 0.8.7)",
+  "total_verified": 12,
+  "unique_hashes": 12,
+  "older_hash_collisions": 0,
+  "flagged_under_30kb": [
+    {
+      "action": "01_super_admin_dashboard",
+      "file": "01_super_admin_dashboard.png",
+      "size": 23218,
+      "text_length": 1413,
+      "note": "Size 23218 B (<30KB). DOM text length: 1413 chars. Non-empty verified."
+    },
+    {
+      "action": "02_staff_accountant_payments",
+      "file": "02_staff_accountant_payments.png",
+      "size": 23354,
+      "text_length": 917,
+      "note": "Size 23354 B (<30KB). DOM text length: 917 chars. Non-empty verified."
+    },
+    {
+      "action": "03_staff_support_doctors",
+      "file": "03_staff_support_doctors.png",
+      "size": 23712,
+      "text_length": 2079,
+      "note": "Size 23712 B (<30KB). DOM text length: 2079 chars. Non-empty verified."
+    },
+    {
+      "action": "04_doctor_dashboard",
+      "file": "04_doctor_dashboard.png",
+      "size": 20845,
+      "text_length": 1040,
+      "note": "Size 20845 B (<30KB). DOM text length: 1040 chars. Non-empty verified."
+    },
+    {
+      "action": "05_patient_dashboard",
+      "file": "05_patient_dashboard.png",
+      "size": 21581,
+      "text_length": 1261,
+      "note": "Size 21581 B (<30KB). DOM text length: 1261 chars. Non-empty verified."
+    },
+    {
+      "action": "07_doctor_booking_view",
+      "file": "07_doctor_booking_view.png",
+      "size": 24237,
+      "text_length": 1167,
+      "note": "Size 24237 B (<30KB). DOM text length: 1167 chars. Non-empty verified."
+    },
+    {
+      "action": "08_patient_payment_upload",
+      "file": "08_patient_payment_upload.png",
+      "size": 22673,
+      "text_length": 815,
+      "note": "Size 22673 B (<30KB). DOM text length: 815 chars. Non-empty verified."
+    },
+    {
+      "action": "09_staff_payment_approved",
+      "file": "09_staff_payment_approved.png",
+      "size": 23279,
+      "text_length": 917,
+      "note": "Size 23279 B (<30KB). DOM text length: 917 chars. Non-empty verified."
+    },
+    {
+      "action": "11_prescription_slip_view",
+      "file": "11_prescription_slip_view.png",
+      "size": 25236,
+      "text_length": 1133,
+      "note": "Size 25236 B (<30KB). DOM text length: 1133 chars. Non-empty verified."
+    },
+    {
+      "action": "12_file_access_denial_blocked",
+      "file": "12_file_access_denial_blocked.png",
+      "size": 15866,
+      "text_length": 589,
+      "note": "Size 15866 B (<30KB). DOM text length: 589 chars. Non-empty verified."
+    }
+  ],
+  "actions": [
+    {
+      "file": "01_super_admin_dashboard.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\01_super_admin_dashboard.png",
+      "url": "https://127.0.0.1:5000/admin/dashboard",
+      "size": 23218,
+      "sha256": "fc76e59479f467d3b1ddfe1d0639b2dfc068ba97080eb133bf973e29a2534b4a",
+      "element_verified": true,
+      "text_length": 1413,
+      "action": "01_super_admin_dashboard",
+      "role": "Super Admin",
+      "description": "PostgreSQL smoke test: Super Admin landing dashboard with system metrics",
+      "inspection_note": "Size 23218 B (<30KB). DOM text length: 1413 chars. Non-empty verified."
+    },
+    {
+      "file": "02_staff_accountant_payments.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\02_staff_accountant_payments.png",
+      "url": "https://127.0.0.1:5000/admin/payments",
+      "size": 23354,
+      "sha256": "b4c436a16dd84359b68438104eaa5bd652bb7bd9ef5a10daaf5e6f397194e261",
+      "element_verified": true,
+      "text_length": 917,
+      "action": "02_staff_accountant_payments",
+      "role": "Staff Admin (Accounts)",
+      "description": "PostgreSQL smoke test: Staff Accountant accessing payment verification list",
+      "inspection_note": "Size 23354 B (<30KB). DOM text length: 917 chars. Non-empty verified."
+    },
+    {
+      "file": "03_staff_support_doctors.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\03_staff_support_doctors.png",
+      "url": "https://127.0.0.1:5000/admin/doctors",
+      "size": 23712,
+      "sha256": "a09140443dfca779be1a391f0ef42d45993e776317685f26db769852cee7c883",
+      "element_verified": true,
+      "text_length": 2079,
+      "action": "03_staff_support_doctors",
+      "role": "Staff Admin (Support)",
+      "description": "PostgreSQL smoke test: Staff Support accessing doctor credential moderation portal",
+      "inspection_note": "Size 23712 B (<30KB). DOM text length: 2079 chars. Non-empty verified."
+    },
+    {
+      "file": "04_doctor_dashboard.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\04_doctor_dashboard.png",
+      "url": "https://127.0.0.1:5000/doctors/dashboard",
+      "size": 20845,
+      "sha256": "7e500655c093dad39f5e3638fd6324fb1bde6cf157cacfe732dea6d9b1cc71da",
+      "element_verified": true,
+      "text_length": 1040,
+      "action": "04_doctor_dashboard",
+      "role": "Doctor",
+      "description": "PostgreSQL smoke test: Doctor clinical dashboard with active stats",
+      "inspection_note": "Size 20845 B (<30KB). DOM text length: 1040 chars. Non-empty verified."
+    },
+    {
+      "file": "05_patient_dashboard.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\05_patient_dashboard.png",
+      "url": "https://127.0.0.1:5000/patients/dashboard",
+      "size": 21581,
+      "sha256": "43e11f36577e422d2d3241314d88b7635aae4c4c4c26728206b5cc318ef164a7",
+      "element_verified": true,
+      "text_length": 1261,
+      "action": "05_patient_dashboard",
+      "role": "Patient",
+      "description": "PostgreSQL smoke test: Patient portal dashboard with verified complete profile",
+      "inspection_note": "Size 21581 B (<30KB). DOM text length: 1261 chars. Non-empty verified."
+    },
+    {
+      "file": "06_find_doctors.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\06_find_doctors.png",
+      "url": "https://127.0.0.1:5000/patients/find-doctors",
+      "size": 61995,
+      "sha256": "cd69fac2514e2ce61ea6fb42738bf83fafdb15aedca3b0ae56083c104b223aae",
+      "element_verified": true,
+      "text_length": 952,
+      "action": "06_find_doctors",
+      "role": "Patient",
+      "description": "PostgreSQL smoke test: Patient searching doctor directory with specialty filters",
+      "inspection_note": "OK (>=30KB)"
+    },
+    {
+      "file": "07_doctor_booking_view.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\07_doctor_booking_view.png",
+      "url": "https://127.0.0.1:5000/patients/doctor/1/book",
+      "size": 24237,
+      "sha256": "ed7cc634ef9397f43659559cb3414f718b4753c37b3f9b425ea6e2b6fef4601a",
+      "element_verified": true,
+      "text_length": 1167,
+      "action": "07_doctor_booking_view",
+      "role": "Patient",
+      "description": "PostgreSQL smoke test: Appointment booking screen accessed without profile warning",
+      "inspection_note": "Size 24237 B (<30KB). DOM text length: 1167 chars. Non-empty verified."
+    },
+    {
+      "file": "08_patient_payment_upload.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\08_patient_payment_upload.png",
+      "url": "https://127.0.0.1:5000/appointments/4",
+      "size": 22673,
+      "sha256": "aa41506ad164733af859f07c067942206cb17199a68e561a1a21f3f65dfeac16",
+      "element_verified": true,
+      "text_length": 815,
+      "action": "08_patient_payment_upload",
+      "role": "Patient",
+      "description": "PostgreSQL smoke test: Patient appointment view with payment upload options",
+      "inspection_note": "Size 22673 B (<30KB). DOM text length: 815 chars. Non-empty verified."
+    },
+    {
+      "file": "09_staff_payment_approved.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\09_staff_payment_approved.png",
+      "url": "https://127.0.0.1:5000/admin/payments",
+      "size": 23279,
+      "sha256": "4bd095fbd8409dd55fbc1943e319a41f5ac75b784faeddbdabd2065aef243c48",
+      "element_verified": true,
+      "text_length": 917,
+      "action": "09_staff_payment_approved",
+      "role": "Staff Admin (Accounts)",
+      "description": "PostgreSQL smoke test: Staff Accountant payment verification after processing approval",
+      "inspection_note": "Size 23279 B (<30KB). DOM text length: 917 chars. Non-empty verified."
+    },
+    {
+      "file": "10_consultation_chat_rendered.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\10_consultation_chat_rendered.png",
+      "url": "https://127.0.0.1:5000/appointments/1/chat",
+      "size": 58902,
+      "sha256": "16cc308d73939bd4129b779c7a3ce9540239461315d6162ae4e9deb4852cae5b",
+      "element_verified": true,
+      "text_length": 795,
+      "action": "10_consultation_chat_rendered",
+      "role": "Patient",
+      "description": "PostgreSQL smoke test: Live consultation chat screen with real message rendered",
+      "inspection_note": "OK (>=30KB)"
+    },
+    {
+      "file": "11_prescription_slip_view.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\11_prescription_slip_view.png",
+      "url": "https://127.0.0.1:5000/prescriptions/view/1",
+      "size": 25236,
+      "sha256": "c66fe94be8136b43c706098ed254ee9978b0cc3b023adc3883a27f298dc6bb50",
+      "element_verified": true,
+      "text_length": 1133,
+      "action": "11_prescription_slip_view",
+      "role": "Patient",
+      "description": "PostgreSQL smoke test: Digital prescription slip issued by Dr. Fatima Zahra for patient Mariam Khan",
+      "inspection_note": "Size 25236 B (<30KB). DOM text length: 1133 chars. Non-empty verified."
+    },
+    {
+      "file": "12_file_access_denial_blocked.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase3\\screenshots\\12_file_access_denial_blocked.png",
+      "url": "https://127.0.0.1:5000/files/identity/2/front",
+      "size": 15866,
+      "sha256": "9293b3fa95df214d71a57fbd6ad768e8c868351053d4e0f316cd94375188fb33",
+      "element_verified": true,
+      "text_length": 589,
+      "action": "12_file_access_denial_blocked",
+      "role": "Anonymous",
+      "description": "PostgreSQL smoke test: Anonymous file access denied with strict HTTP 404",
+      "inspection_note": "Size 15866 B (<30KB). DOM text length: 589 chars. Non-empty verified."
+    }
+  ]
+}

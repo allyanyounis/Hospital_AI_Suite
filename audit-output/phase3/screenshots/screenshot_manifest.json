@@ -1,0 +1,47 @@
+{
+  "07_patient_dashboard.png": {
+    "description": "Patient Dashboard",
+    "url": "https://127.0.0.1:5000/patients/dashboard",
+    "title": "Patient Dashboard - Quick Care Connect",
+    "heading": "NO_HEADING",
+    "size_bytes": 20202,
+    "sha256": "BD0A29B7444AF31F8CD3C3E49A8DE94FF3C0A169C751BEEC86E0CB08D6F67D9E",
+    "status": "AUTHENTICATED_AND_VERIFIED"
+  },
+  "08_admin_dashboard.png": {
+    "description": "Admin Dashboard",
+    "url": "https://127.0.0.1:5000/admin/dashboard",
+    "title": "Admin Dashboard - Quick Care Connect",
+    "heading": "System Overview",
+    "size_bytes": 19561,
+    "sha256": "6BEE15E30B97B32487FC5B7EA95AA6F3BBAFE950889875EB043AB2C7E235B222",
+    "status": "AUTHENTICATED_AND_VERIFIED"
+  },
+  "09_doctor_dashboard.png": {
+    "description": "Doctor Dashboard",
+    "url": "https://127.0.0.1:5000/doctors/dashboard",
+    "title": "Doctor Dashboard - Quick Care Connect",
+    "heading": "NO_HEADING",
+    "size_bytes": 22051,
+    "sha256": "6CAD0A66797D824F20D981505AA5EFF9AC531DFA4D2E3A3C8114AEF3C60C7427",
+    "status": "AUTHENTICATED_AND_VERIFIED"
+  },
+  "10_appointment_details.png": {
+    "description": "Appointment #23 Details",
+    "url": "https://127.0.0.1:5000/appointments/23",
+    "title": "Appointment Details - Quick Care Connect",
+    "heading": "Appointment Details",
+    "size_bytes": 30225,
+    "sha256": "1E4EE873D6E65E063C529110DF9D3D4A687B21DFEF398BCCF8C38E74B98A3DFA",
+    "status": "AUTHENTICATED_AND_VERIFIED"
+  },
+  "12_patient_documents.png": {
+    "description": "Patient Documents Vault",
+    "url": "https://127.0.0.1:5000/patients/documents",
+    "title": "My Documents \u2014 Quick Care Connect",
+    "heading": "My Medical Documents",
+    "size_bytes": 25140,
+    "sha256": "76D1FD7830DDA7940757D02EB5DEBB780FA1D6A445D3C0B1464D66C05D636998",
+    "status": "AUTHENTICATED_AND_VERIFIED"
+  }
+}

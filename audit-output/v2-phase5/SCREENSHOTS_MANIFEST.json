@@ -1,0 +1,82 @@
+[
+  {
+    "filename": "01_platform_super_admin.png",
+    "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase5\\screenshots\\01_platform_super_admin.png",
+    "url": "https://127.0.0.1:5001/admin/platform/",
+    "title": "Platform Super Admin Console \u2014 Aramis Health",
+    "heading": "Platform Super Admin Console",
+    "bytes": 174802,
+    "sha256": "432f17047648418590ae360b03652409d44ff802cac467fcb3d853d78cbee401",
+    "description": "Platform Super Admin console with cross-tenant hospital list and BYPASSRLS badge"
+  },
+  {
+    "filename": "02_hospital_org_chart.png",
+    "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase5\\screenshots\\02_hospital_org_chart.png",
+    "url": "https://127.0.0.1:5001/admin/org-chart",
+    "title": "Hospital Staff Hierarchy & Org Chart \u2014 Aramis Health",
+    "heading": "Hospital 1 \u2014 Organizational Hierarchy",
+    "bytes": 112707,
+    "sha256": "9cab59a229613973539ef647eb2f24e985457a2c45052095c1b934109ba9a561",
+    "description": "Hospital 1 visual organizational hierarchy chart (4 levels: Admin -> Directors -> HOD -> Staff)"
+  },
+  {
+    "filename": "03_department_staff_console.png",
+    "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase5\\screenshots\\03_department_staff_console.png",
+    "url": "https://127.0.0.1:5001/admin/department-staff",
+    "title": "Department Staff Console \u2014 Aramis Health",
+    "heading": "Cardiology \u2014 Staff Console",
+    "bytes": 296185,
+    "sha256": "a0d63c0c5f1ccc945cfc364a174e46711c9349f0dd55ae308b735bbb82032b6d",
+    "description": "Cardiology HOD scoped department staff management console (Hospital A, Cardiology)"
+  },
+  {
+    "filename": "04_hospital_switcher_navbar.png",
+    "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase5\\screenshots\\04_hospital_switcher_navbar.png",
+    "url": "https://127.0.0.1:5001/",
+    "title": "Aramis AI Healthcare Solutions \u2013 Home",
+    "heading": "Best HealthCare Services Available",
+    "bytes": 643856,
+    "sha256": "b92848ebdf95706c0b959b939ce1d430e26262f03a5eb651aacebd81a7b2e84e",
+    "description": "Homepage header showing Aramis Health branding and active tenant hospital switcher"
+  },
+  {
+    "filename": "05_find_doctors_hospital_filter.png",
+    "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase5\\screenshots\\05_find_doctors_hospital_filter.png",
+    "url": "https://127.0.0.1:5001/patients/find-doctors",
+    "title": "Find Doctors - Aramis Health",
+    "heading": "Connect with Top Specialists",
+    "bytes": 226883,
+    "sha256": "710991757020a01832c72adaae713b982c15151bd7beeacaa877520303326ac6",
+    "description": "Find Doctors specialist search directory featuring hospital tenant filtering"
+  },
+  {
+    "filename": "06_prescription_view_aramis_health.png",
+    "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase5\\screenshots\\06_prescription_view_aramis_health.png",
+    "url": "https://127.0.0.1:5001/prescriptions/view/3",
+    "title": "Prescription #3 - Aramis Health",
+    "heading": "Aramis Health Medical Prescription",
+    "bytes": 109911,
+    "sha256": "4daa4beb580e5bdfdcfc7f313a97fb3fe37c7fcf0be16a23f3e7243e554489d5",
+    "description": "Patient digital prescription view featuring Aramis Health operating branding"
+  },
+  {
+    "filename": "07_finance_manager_payments_view.png",
+    "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase5\\screenshots\\07_finance_manager_payments_view.png",
+    "url": "https://127.0.0.1:5001/admin/accounts",
+    "title": "Accounts - Aramis Health",
+    "heading": "Accounts Dashboard",
+    "bytes": 162993,
+    "sha256": "92a7d51de919a79687953b82349faf3807f37256a604c5c9f8f8e3ab7bf2822f",
+    "description": "Finance manager of Hospital A viewing accounts & revenue with zero clinical payloads"
+  },
+  {
+    "filename": "08_cross_tenant_appointment_404.png",
+    "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase5\\screenshots\\08_cross_tenant_appointment_404.png",
+    "url": "https://127.0.0.1:5001/admin/appointments/view/14",
+    "title": "Page Not Found - Aramis Health",
+    "heading": "404 - Page not found",
+    "bytes": 230975,
+    "sha256": "ea4819aa0e99a43cad0858b321238e557a3fcd31342f01a56540e2d4daa85d84",
+    "description": "Hospital 1 admin opening Hospital 2 appointment URL returning strict HTTP 404 under RLS"
+  }
+]

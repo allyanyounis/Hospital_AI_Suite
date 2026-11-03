@@ -1,0 +1,21 @@
+flowchart TD
+    subgraph Users ["Healthcare Stakeholders"]
+        direction LR
+        P["Patients<br/><small>Search, Book, Consult & Records</small>"]
+        D["Doctors & Clinics<br/><small>Schedules, Video Visits & Payouts</small>"]
+    end
+
+    QC["Quick Care Platform Engine<br/><small>Smart Scheduling • HD Telehealth • Escrow Payments • E-Prescriptions</small>"]
+
+    ADM["Hospital & Platform Admins<br/><small>PMDC Verification • Payment Approvals • Role Management • Analytics</small>"]
+
+    P <-->|"Bookings & Care"| QC
+    D <-->|"Practice & Earnings"| QC
+    ADM -->|"Monitors & Governs"| QC
+
+    style P fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+    style D fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+    style QC fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
+    style ADM fill:#047857,stroke:#065f46,stroke-width:2px,color:#ffffff
+    style Users fill:#f0fdf4,stroke:#a7f3d0,stroke-dasharray: 5 5
+

@@ -1,0 +1,109 @@
+{
+  "flow_1": {
+    "title": "Doctor registers -> completes profile -> submits for approval",
+    "status": "WORKING (with flaw: profile_completed flag never updated in doctor profile)",
+    "details": "Registration creates Doctor record with is_approved=False, is_verified=False, appeal_status='pending'. Doctor dashboard warns complete profile until edit_profile is saved.",
+    "evidence": {
+      "file": "flow1_doctor_register.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\audit_evidence\\screenshots\\flow1_doctor_register.png",
+      "hash": "e01e87b8c586b4c6ad1b90d9200e9b5db86e2fe675661c27d26fb51831688912",
+      "size_kb": 20.1640625
+    }
+  },
+  "flow_2": {
+    "title": "Admin approves doctor -> appears in Find Doctors and department",
+    "status": "BROKEN",
+    "details": "CRITICAL FLAW CONFIRMED: doctors_by_category route has hardcoded `Doctor.time_slots != {}` and `if not practices: continue`. An approved doctor without configured time slots is completely hidden from patient listings (HTTP 200 returns 0 doctors).",
+    "evidence": {
+      "file": "flow2_admin_pending_doctors.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\audit_evidence\\screenshots\\flow2_admin_pending_doctors.png",
+      "hash": "0dc261197954fcbca5e2e6c39f88ef89b7dfeaf8528d08d5bba32f8430c8998a",
+      "size_kb": 46.8388671875
+    }
+  },
+  "flow_3": {
+    "title": "Doctor writes a blog -> admin approves -> appears in public blog list",
+    "status": "WORKING",
+    "details": "Public blogs route queries status='published'. Draft vs pending submission works after Phase 3 TinyMCE and route fix (commit ac72000).",
+    "evidence": {
+      "file": "flow3_public_blogs.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\audit_evidence\\screenshots\\flow3_public_blogs.png",
+      "hash": "fdf4cb2d12f3f7c0d46096d75a429a1036c14c5699b43523013f7e833f3e7f66",
+      "size_kb": 54.1181640625
+    }
+  },
+  "flow_4": {
+    "title": "Patient finds a doctor: department -> doctor list -> profile",
+    "status": "WORKING (for seeded doctors with slots; BROKEN for new doctors without slots)",
+    "details": "Find Doctors shows specialties. Category shows doctors with slots. Doctor card links directly to profile view /patient/doctor/<id>.",
+    "evidence": [
+      {
+        "file": "flow4_find_doctors.png",
+        "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\audit_evidence\\screenshots\\flow4_find_doctors.png",
+        "hash": "db6b296be62533ded73ecbed1dbbc60d2c230917605d36f1290d7d3e6906167f",
+        "size_kb": 15.4189453125
+      },
+      {
+        "file": "flow4_doctor_list.png",
+        "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\audit_evidence\\screenshots\\flow4_doctor_list.png",
+        "hash": "ccde8ef1491254d0f2c7e60064226419caf23cc4f7a9790c625f785894f98593",
+        "size_kb": 16.0400390625
+      }
+    ]
+  },
+  "flow_5": {
+    "title": "Doctor manages time slots",
+    "status": "WORKING",
+    "details": "Doctor can configure practice locations, video and physical consultation fees, and weekly day/hour slots via /doctors/appointment-settings.",
+    "evidence": {
+      "file": "flow5_doctor_schedule_settings.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\audit_evidence\\screenshots\\flow5_doctor_schedule_settings.png",
+      "hash": "aef505ebe703e255c46ab1183d0adb7fda791e3f5230292a8bcf42070033c54a",
+      "size_kb": 46.6943359375
+    }
+  },
+  "flow_6": {
+    "title": "Patient books: chooses doctor -> physical or online -> slot -> payment -> admin confirms -> doctor confirms",
+    "status": "WORKING",
+    "details": "Booking interface allows date and time selection, disease category, and payment upload. Admin payment verification works.",
+    "evidence": {
+      "file": "flow6_patient_booking.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\audit_evidence\\screenshots\\flow6_patient_booking.png",
+      "hash": "43bd84d767f3bb02cfdc7b61dfe83c77afb3700be89c3bf0d2e2ff7302e4d475",
+      "size_kb": 46.9375
+    }
+  },
+  "flow_7": {
+    "title": "Video consultation: doctor and patient join -> prescription -> patient views web and PDF",
+    "status": "WORKING",
+    "details": "Prescription view (/prescriptions/1) displays PMDC-compliant digital prescription with medicines, dosage, and PDF download link.",
+    "evidence": {
+      "file": "flow7_prescription_view.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\audit_evidence\\screenshots\\flow7_prescription_view.png",
+      "hash": "cf405cb2c7173c563717e89302507de79d4753c44fdee6b1826de8c1158834b9",
+      "size_kb": 15.873046875
+    }
+  },
+  "flow_8": {
+    "title": "Admin manages patients and doctors: view lists, view profile/details, activate/deactivate account",
+    "status": "INCOMPLETE / MISSING",
+    "details": "Admin can view patient list and doctor list, but there is NO endpoint or UI to activate/deactivate (toggle is_active) patient or doctor accounts. Full activity summaries are incomplete.",
+    "evidence": {
+      "file": "flow8_admin_patients_list.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\audit_evidence\\screenshots\\flow8_admin_patients_list.png",
+      "hash": "2bff4ef0487f1b4c9e9a8bb79baf39b013ad88f8cd385a601f3425eef3af8eba",
+      "size_kb": 46.982421875
+    }
+  },
+  "flow_9": {
+    "title": "Staff roles: sub-admin restricted to assigned panels",
+    "status": "WORKING",
+    "details": "Staff Accountant is restricted to Accounts and Payments panels; attempts to access Patients panel redirect with access denied. File RBAC verified.",
+    "evidence": {
+      "file": "flow9_staff_accountant_panel.png",
+      "path": "c:\\Users\\Mubeen\\Desktop\\Quick Care FYP\\Quick Care FYP\\audit-output\\v2-phase4\\audit_evidence\\screenshots\\flow9_staff_accountant_panel.png",
+      "hash": "c627968bee80d30dc9138ad59acad4df12d90bb1103425b05d046d31f4985c6f",
+      "size_kb": 16.072265625
+    }
+  }
+}

@@ -1,0 +1,541 @@
+{
+  "public_pages": [
+    {
+      "name": "Landing Page",
+      "path": "/",
+      "status_code": 200,
+      "latency_ms": 55.82,
+      "size_bytes": 116018
+    },
+    {
+      "name": "Doctor Directory (/doctors)",
+      "path": "/doctors",
+      "status_code": 500,
+      "latency_ms": 34.32,
+      "size_bytes": 32897
+    },
+    {
+      "name": "Patient Find Doctors (/patients/find-doctors)",
+      "path": "/patients/find-doctors",
+      "status_code": 200,
+      "latency_ms": 34.06,
+      "size_bytes": 45793
+    },
+    {
+      "name": "Diseases Knowledgebase",
+      "path": "/diseases",
+      "status_code": 200,
+      "latency_ms": 60.38,
+      "size_bytes": 46145
+    },
+    {
+      "name": "Medical Blogs",
+      "path": "/blogs",
+      "status_code": 200,
+      "latency_ms": 95.29,
+      "size_bytes": 50806
+    },
+    {
+      "name": "Community Q&A",
+      "path": "/qa",
+      "status_code": 200,
+      "latency_ms": 73.89,
+      "size_bytes": 57608
+    },
+    {
+      "name": "About Us",
+      "path": "/about",
+      "status_code": 200,
+      "latency_ms": 40.4,
+      "size_bytes": 38559
+    },
+    {
+      "name": "FAQ",
+      "path": "/faq",
+      "status_code": 200,
+      "latency_ms": 54.35,
+      "size_bytes": 30270
+    },
+    {
+      "name": "How It Works",
+      "path": "/how-it-works",
+      "status_code": 200,
+      "latency_ms": 29.44,
+      "size_bytes": 30144
+    },
+    {
+      "name": "Terms of Service",
+      "path": "/terms",
+      "status_code": 200,
+      "latency_ms": 40.75,
+      "size_bytes": 29139
+    },
+    {
+      "name": "Privacy Policy",
+      "path": "/privacy",
+      "status_code": 200,
+      "latency_ms": 48.52,
+      "size_bytes": 29702
+    }
+  ],
+  "user_journeys": [
+    {
+      "journey": "Landing Page",
+      "role": "Public",
+      "method": "GET",
+      "route": "/",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": " 55.8ms, 116018 bytes"
+    },
+    {
+      "journey": "Doctor Directory (/doctors)",
+      "role": "Public",
+      "method": "GET",
+      "route": "/doctors",
+      "status_code": 500,
+      "state": "BROKEN (500)",
+      "notes": " 34.3ms,  32897 bytes (TemplateNotFound: home/doctors.html)"
+    },
+    {
+      "journey": "Patient Find Doctors (/patients/find-doctors)",
+      "role": "Public",
+      "method": "GET",
+      "route": "/patients/find-doctors",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": " 34.1ms,  45793 bytes"
+    },
+    {
+      "journey": "Diseases Knowledgebase",
+      "role": "Public",
+      "method": "GET",
+      "route": "/diseases",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": " 60.4ms,  46145 bytes"
+    },
+    {
+      "journey": "Medical Blogs",
+      "role": "Public",
+      "method": "GET",
+      "route": "/blogs",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": " 95.3ms,  50806 bytes"
+    },
+    {
+      "journey": "Community Q&A",
+      "role": "Public",
+      "method": "GET",
+      "route": "/qa",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": " 73.9ms,  57608 bytes"
+    },
+    {
+      "journey": "About Us",
+      "role": "Public",
+      "method": "GET",
+      "route": "/about",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": " 40.4ms,  38559 bytes"
+    },
+    {
+      "journey": "FAQ",
+      "role": "Public",
+      "method": "GET",
+      "route": "/faq",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": " 54.3ms,  30270 bytes"
+    },
+    {
+      "journey": "How It Works",
+      "role": "Public",
+      "method": "GET",
+      "route": "/how-it-works",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": " 29.4ms,  30144 bytes"
+    },
+    {
+      "journey": "Terms of Service",
+      "role": "Public",
+      "method": "GET",
+      "route": "/terms",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": " 40.7ms,  29139 bytes"
+    },
+    {
+      "journey": "Privacy Policy",
+      "role": "Public",
+      "method": "GET",
+      "route": "/privacy",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": " 48.5ms,  29702 bytes"
+    },
+    {
+      "journey": "Guest AI Chatbot (/qa/ai-chat)",
+      "role": "Public",
+      "method": "POST",
+      "route": "/qa/ai-chat",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Provider: fallback, 1993.8ms"
+    },
+    {
+      "journey": "Patient Registration",
+      "role": "Guest",
+      "method": "POST",
+      "route": "/auth/register",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Existing User ID 14"
+    },
+    {
+      "journey": "Patient Login",
+      "role": "Patient",
+      "method": "POST",
+      "route": "/auth/login",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Redirected to https://127.0.0.1:5000/patients/dashboard"
+    },
+    {
+      "journey": "Doctor Registration",
+      "role": "Guest",
+      "method": "POST",
+      "route": "/auth/register",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Existing User ID 15"
+    },
+    {
+      "journey": "Admin Login",
+      "role": "Admin",
+      "method": "POST",
+      "route": "/auth/login",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Redirected to https://127.0.0.1:5000/admin/dashboard"
+    },
+    {
+      "journey": "Admin Doctor Approval",
+      "role": "Admin",
+      "method": "POST",
+      "route": "/admin/doctors/9/approve",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Approved and verified"
+    },
+    {
+      "journey": "Doctor Login (Approved)",
+      "role": "Doctor",
+      "method": "POST",
+      "route": "/auth/login",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Redirected to https://127.0.0.1:5000/doctors/dashboard"
+    },
+    {
+      "journey": "Password Reset Request",
+      "role": "Guest",
+      "method": "POST",
+      "route": "/auth/forgot-password",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Token created, email suppressed"
+    },
+    {
+      "journey": "Patient Appointment Booking",
+      "role": "Patient",
+      "method": "POST",
+      "route": "/patients/doctor/9/book",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Appointment #23, Fee: Rs. 1500.0"
+    },
+    {
+      "journey": "Patient Upload Payment Proof",
+      "role": "Patient",
+      "method": "POST",
+      "route": "/patients/appointments/23/upload-payment",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Payment submitted"
+    },
+    {
+      "journey": "Admin Payment Approval",
+      "role": "Admin",
+      "method": "POST",
+      "route": "/admin/payments/23/approve",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Status: pending, Payment: pending"
+    },
+    {
+      "journey": "Doctor Queue / Waiting Room",
+      "role": "Doctor",
+      "method": "GET",
+      "route": "/doctors/appointments/23/queue",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": ""
+    },
+    {
+      "journey": "Video Token Generation (Agora)",
+      "role": "Doctor",
+      "method": "GET",
+      "route": "/video/token/23",
+      "status_code": 400,
+      "state": "PARTIAL",
+      "notes": "Token: False"
+    },
+    {
+      "journey": "Doctor Prescription Creation",
+      "role": "Doctor",
+      "method": "POST",
+      "route": "/prescriptions/create/23",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Prescription ID #14"
+    },
+    {
+      "journey": "Patient Prescription View",
+      "role": "Patient",
+      "method": "GET",
+      "route": "/prescriptions/view/14",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": ""
+    },
+    {
+      "journey": "Prescription PDF Download (ISS-DEP-01)",
+      "role": "Patient",
+      "method": "GET",
+      "route": "/prescriptions/download/14",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "PDF size: 6331 bytes"
+    },
+    {
+      "journey": "Patient Review Submission",
+      "role": "Patient",
+      "method": "POST",
+      "route": "/reviews/submit",
+      "status_code": 400,
+      "state": "BROKEN",
+      "notes": ""
+    },
+    {
+      "journey": "Patient Document Vault Upload",
+      "role": "Patient",
+      "method": "POST",
+      "route": "/patients/documents/upload",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": ""
+    },
+    {
+      "journey": "Patient Document Vault View",
+      "role": "Patient",
+      "method": "GET",
+      "route": "/patients/documents",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": ""
+    },
+    {
+      "journey": "Patient Appointment Cancellation",
+      "role": "Patient",
+      "method": "POST",
+      "route": "/patients/appointments/24/cancel",
+      "status_code": 200,
+      "state": "BROKEN",
+      "notes": "Status: pending"
+    },
+    {
+      "journey": "Patient Refunds Dashboard",
+      "role": "Patient",
+      "method": "GET",
+      "route": "/patients/refunds",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": ""
+    },
+    {
+      "journey": "Doctor Blog Creation (Draft)",
+      "role": "Doctor",
+      "method": "POST",
+      "route": "/doctors/blogs/new",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Blog #13, Status: draft"
+    },
+    {
+      "journey": "Blog Moderation & Stored XSS (ISS-SEC-05)",
+      "role": "Public",
+      "method": "GET",
+      "route": "/blogs/13",
+      "status_code": 200,
+      "state": "WORKING (VULNERABLE)",
+      "notes": "Raw unescaped markup in DOM: True"
+    },
+    {
+      "journey": "Admin Staff Creation",
+      "role": "Admin",
+      "method": "POST",
+      "route": "/admin/staff/new",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Created staff member"
+    },
+    {
+      "journey": "Staff Admin Login",
+      "role": "Staff",
+      "method": "POST",
+      "route": "/auth/login",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Redirected to https://127.0.0.1:5000/auth/login"
+    },
+    {
+      "journey": "Staff Restricted Panel (AJAX 403)",
+      "role": "Staff",
+      "method": "GET",
+      "route": "/admin/accounts",
+      "status_code": 401,
+      "state": "BROKEN",
+      "notes": "Restricted role received 403 Forbidden"
+    },
+    {
+      "journey": "Staff Restricted Staff Mgmt (AJAX 403)",
+      "role": "Staff",
+      "method": "GET",
+      "route": "/admin/staff",
+      "status_code": 403,
+      "state": "WORKING",
+      "notes": "Super-admin guard enforced"
+    },
+    {
+      "journey": "Real-Time Socket.IO Consultation Chat",
+      "role": "Patient/Doctor",
+      "method": "WS",
+      "route": "/socket.io/",
+      "status_code": 200,
+      "state": "WORKING",
+      "notes": "Connected & joined room appointment_23"
+    }
+  ],
+  "issue_verifications": {
+    "ISS-BUG-01": {
+      "title": "Missing @login_required crashes /prescriptions/view/<id>",
+      "status": "CONFIRMED",
+      "http_status": 500,
+      "evidence": "Unauthenticated GET /prescriptions/view/1 triggers HTTP 500 AttributeError: 'NoneType' object has no attribute 'role'"
+    },
+    "ISS-SEC-03": {
+      "title": "Unauthenticated access to sensitive health documents in /static/uploads/",
+      "status": "CONFIRMED",
+      "evidence": "Direct GET without session returns HTTP 200 (generic upload) and HTTP 200 (medical document)"
+    },
+    "ISS-SEC-01": {
+      "title": "Global CSRF Protection Disabled (WTF_CSRF_ENABLED = False)",
+      "status": "CONFIRMED",
+      "evidence": "POST /newsletter with no CSRF token accepted with HTTP 200 (redirect), not rejected with 400"
+    },
+    "ISS-FE-01": {
+      "title": "Unclosed container div in base.html lines 413-502",
+      "status": "CONFIRMED",
+      "evidence": "<div class='container'> opened at line 413, navbar-collapse closed at line 501, navbar closed at line 502 without closing container div. Mobile screenshot 02_landing_mobile.png captured."
+    },
+    "ISS-BUG-02": {
+      "title": "Timezone Desynchronization (datetime.now() vs get_pakistan_time())",
+      "status": "CONFIRMED",
+      "evidence": "Static analysis reveals datetime.utcnow() in patients.py:237,474,966; datetime.now() in patients.py:836 and check_expired_appointments.py:22 vs get_pakistan_now() in timezone.py."
+    },
+    "ISS-DEP-01": {
+      "title": "Missing xhtml2pdf dependency in requirements.txt",
+      "status": "CONFIRMED_AND_RESOLVED",
+      "evidence": "With xhtml2pdf installed in venv, authenticated download returns HTTP 200, Content-Type: application/pdf, PDF Size: 6331 bytes."
+    },
+    "ISS-SEC-05": {
+      "title": "Stored Cross-Site Scripting (XSS) in Doctor Blog Submissions",
+      "status": "CONFIRMED",
+      "evidence": "Doctor blog #13 content was rendered raw in /blogs/13 with Jinja '| safe' filter. Unsanitized markup found in response body: True."
+    }
+  },
+  "screenshots": [
+    {
+      "filename": "01_landing_desktop.png",
+      "url": "https://127.0.0.1:5000/",
+      "resolution": "1280x900",
+      "size_bytes": 481312
+    },
+    {
+      "filename": "03_doctors_directory.png",
+      "url": "https://127.0.0.1:5000/patients/find-doctors",
+      "resolution": "1280x900",
+      "size_bytes": 199968
+    },
+    {
+      "filename": "04_diseases_encyclopedia.png",
+      "url": "https://127.0.0.1:5000/diseases",
+      "resolution": "1280x900",
+      "size_bytes": 217367
+    },
+    {
+      "filename": "06_qa_forum.png",
+      "url": "https://127.0.0.1:5000/qa",
+      "resolution": "1280x900",
+      "size_bytes": 270709
+    },
+    {
+      "filename": "02_landing_mobile.png",
+      "url": "https://127.0.0.1:5000/",
+      "resolution": "375x812",
+      "size_bytes": 143545
+    },
+    {
+      "filename": "07_patient_dashboard.png",
+      "url": "https://127.0.0.1:5000/patients/dashboard",
+      "resolution": "1280x900",
+      "size_bytes": 169252
+    },
+    {
+      "filename": "08_admin_dashboard.png",
+      "url": "https://127.0.0.1:5000/admin/dashboard",
+      "resolution": "1280x900",
+      "size_bytes": 169252
+    },
+    {
+      "filename": "09_doctor_dashboard.png",
+      "url": "https://127.0.0.1:5000/doctors/dashboard",
+      "resolution": "1280x900",
+      "size_bytes": 169252
+    },
+    {
+      "filename": "10_appointment_details.png",
+      "url": "https://127.0.0.1:5000/appointments/23",
+      "resolution": "1280x900",
+      "size_bytes": 169252
+    },
+    {
+      "filename": "11_prescription_view.png",
+      "url": "https://127.0.0.1:5000/prescriptions/view/14",
+      "resolution": "1280x900",
+      "size_bytes": 82367
+    },
+    {
+      "filename": "13_blog_view_xss.png",
+      "url": "https://127.0.0.1:5000/blogs/13",
+      "resolution": "1280x900",
+      "size_bytes": 127977
+    }
+  ],
+  "performance": {}
+}

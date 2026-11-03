@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Departments - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="fas fa-hospital-user text-primary me-2"></i>Medical Departments</h2>
+            <p class="text-muted mb-0">Manage clinical specialties, icons, display order, and active doctor listings.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin.new_department') }}" class="btn btn-primary fw-semibold px-4 py-2 shadow-sm">
+                <i class="fas fa-plus me-2"></i>Add Department
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3 bg-white rounded-3">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary-subtle text-primary p-3 rounded-circle me-3">
+                        <i class="fas fa-list-ul fa-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Total Departments</div>
+                        <h4 class="fw-bold mb-0">{{ stats.total }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3 bg-white rounded-3">
+                <div class="d-flex align-items-center">
+                    <div class="bg-success-subtle text-success p-3 rounded-circle me-3">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Active Specialties</div>
+                        <h4 class="fw-bold mb-0">{{ stats.active }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3 bg-white rounded-3">
+                <div class="d-flex align-items-center">
+                    <div class="bg-info-subtle text-info p-3 rounded-circle me-3">
+                        <i class="fas fa-user-md fa-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Approved Doctors</div>
+                        <h4 class="fw-bold mb-0">{{ stats.total_doctors }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 60px;">Order</th>
+                        <th>Icon</th>
+                        <th>Department Name</th>
+                        <th>Slug</th>
+                        <th>Doctors Assigned</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in departments %}
+                    <tr>
+                        <td class="fw-bold text-muted ps-3">{{ d.display_order }}</td>
+                        <td>
+                            <div class="bg-light text-primary d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 38px; height: 38px;">
+                                <i class="{{ d.icon or 'fas fa-user-md' }}"></i>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark">{{ d.name }}</div>
+                            <div class="text-muted small text-truncate" style="max-width: 320px;">{{ d.description or 'No description provided' }}</div>
+                        </td>
+                        <td><code>{{ d.slug }}</code></td>
+                        <td>
+                            <span class="badge bg-secondary-subtle text-secondary px-2 py-1 rounded-pill fw-semibold">
+                                {{ d.doctors.count() }} doctors
+                            </span>
+                        </td>
+                        <td>
+                            {% if d.is_active %}
+                            <span class="badge bg-success-subtle text-success px-2 py-1 rounded-pill">Active</span>
+                            {% else %}
+                            <span class="badge bg-secondary-subtle text-muted px-2 py-1 rounded-pill">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="d-inline-flex gap-2">
+                                <a href="{{ url_for('admin.edit_department', dept_id=d.id) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="POST" action="{{ url_for('admin.toggle_department_status', dept_id=d.id) }}" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-sm {% if d.is_active %}btn-outline-warning{% else %}btn-outline-success{% endif %}" title="{% if d.is_active %}Deactivate{% else %}Activate{% endif %}">
+                                        <i class="fas {% if d.is_active %}fa-ban{% else %}fa-check{% endif %}"></i>
+                                    </button>
+                                </form>
+                                {% if d.doctors.count() == 0 %}
+                                <form method="POST" action="{{ url_for('admin.delete_department', dept_id=d.id) }}" class="d-inline" onsubmit="return confirm('Delete department {{ d.name }}?');">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="fas fa-hospital-user fa-3x mb-3 text-secondary opacity-50"></i>
+                            <div>No departments created yet.</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
