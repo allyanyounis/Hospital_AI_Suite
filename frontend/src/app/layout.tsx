@@ -7,7 +7,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   title: "Hospital AI Suite",
-  description: "AI medical scribe and AI voice receptionist in one clinic dashboard",
+  description: "Hospital management with an AI medical scribe and an AI voice receptionist",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

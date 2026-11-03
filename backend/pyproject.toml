@@ -4,9 +4,12 @@ version = "1.0.0"
 description = "Hospital AI Suite backend: AI medical scribe + AI voice receptionist on one API"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.14",
     "anthropic>=2.3",
     "fastapi>=0.115",
     "httpx>=0.28",
+    "numpy>=2.0",
+    "ortools==9.15.6755",
     "psycopg[binary]>=3.2",
     "pydantic-settings>=2.6",
     "python-multipart>=0.0.20",
@@ -17,7 +20,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.3"]
+dev = ["pytest>=8.3", "ruff>=0.8"]
 
 [build-system]
 requires = ["setuptools>=75"]
@@ -39,5 +42,6 @@ select = ["E", "F", "I", "B", "UP"]
 ignore = ["B008"]  # FastAPI's Depends(...) in argument defaults is the intended pattern
 
 [tool.ruff.lint.per-file-ignores]
-"app/scribe/samples/*" = ["E501"]  # scripted consultation text
-"app/scribe/notes/*" = ["E501"]    # prompt and template text
+"app/modules/scribe/samples/*" = ["E501"]  # scripted consultation text
+"app/modules/scribe/notes/*" = ["E501"]    # prompt and template text
+"app/modules/theatre/experiment/*" = ["E501"]  # ported OR scheduling experiment

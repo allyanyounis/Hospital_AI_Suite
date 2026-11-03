@@ -1,0 +1,107 @@
+{
+  "target": "Anaesthesia time in minutes (anaesthesia start to end). Closest VitalDB field to room occupancy; not room entry to exit.",
+  "source": "VitalDB clinical table, Seoul National University Hospital (Lee et al., Scientific Data 2022). Scores only; no VitalDB row is stored here.",
+  "features": "Booked operation, department, approach, position, anaesthesia type, age, sex, size, ASA, emergency flag, hypertension, diabetes, pre-operative labs. Nothing recorded during or after surgery.",
+  "split": "By patient: 60% train, 20% calibration, 20% test. No patient is in two parts.",
+  "cases": {
+    "train": 3779,
+    "calibration": 1293,
+    "test": 1314
+  },
+  "model": "Gradient-boosted quantile trees (scikit-learn HistGradientBoosting, P10/P50/P90 on log minutes) with a split-conformal correction for 80% coverage.",
+  "point": {
+    "historical_mean": {
+      "mae_min": 53.7,
+      "median_abs_min": 39.4,
+      "p90_abs_min": 113.2,
+      "within_30_pct": 40.0,
+      "bias_min": -4.9
+    },
+    "ml_median": {
+      "mae_min": 48.9,
+      "median_abs_min": 32.3,
+      "p90_abs_min": 109.0,
+      "within_30_pct": 47.6,
+      "bias_min": -14.2
+    },
+    "ml_mean": {
+      "mae_min": 49.5,
+      "median_abs_min": 35.5,
+      "p90_abs_min": 108.6,
+      "within_30_pct": 43.8,
+      "bias_min": -2.9
+    }
+  },
+  "range": {
+    "target_pct": 80.0,
+    "historical": {
+      "coverage_pct": 79.0,
+      "width_min": 154.2
+    },
+    "ml_raw": {
+      "coverage_pct": 67.1,
+      "width_min": 119.8
+    },
+    "ml": {
+      "coverage_pct": 80.5,
+      "width_min": 163.3
+    }
+  },
+  "departments": {
+    "General surgery": {
+      "cases": 1031,
+      "historical_mae_min": 52.6,
+      "ml_mae_min": 47.1
+    },
+    "Thoracic surgery": {
+      "cases": 215,
+      "historical_mae_min": 59.5,
+      "ml_mae_min": 57.6
+    },
+    "Gynecology": {
+      "cases": 41,
+      "historical_mae_min": 62.6,
+      "ml_mae_min": 58.3
+    },
+    "Urology": {
+      "cases": 27,
+      "historical_mae_min": 35.9,
+      "ml_mae_min": 34.0
+    }
+  },
+  "drivers": [
+    {
+      "feature": "Operation",
+      "importance": 0.1096
+    },
+    {
+      "feature": "Operation's historical mean",
+      "importance": 0.1015
+    },
+    {
+      "feature": "Open, videoscopic or robotic",
+      "importance": 0.0206
+    },
+    {
+      "feature": "Operation group",
+      "importance": 0.0111
+    },
+    {
+      "feature": "Anaesthesia type",
+      "importance": 0.0107
+    },
+    {
+      "feature": "Pre-op alb",
+      "importance": 0.0018
+    },
+    {
+      "feature": "Age",
+      "importance": 0.0018
+    },
+    {
+      "feature": "Pre-op gluc",
+      "importance": 0.0018
+    }
+  ],
+  "conformal_widen_log": 0.1085
+}

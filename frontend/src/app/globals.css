@@ -3,7 +3,7 @@
 /* ---------------------------------------------------------------------------------------------------------------
    Hospital AI Suite theme: "Clinic Maroon" with amber highlights.
    The brand colour is defined ONCE here; every page uses these tokens (bg-brand-700, text-brand-600, bg-surface …).
-   To re-brand, change the --color-brand-* scale below and the matching hex values in src/lib/theme.ts (charts).
+   To re-brand, change the --color-brand-* scale below and the matching hex values in src/shared/lib/theme.ts (charts).
    --------------------------------------------------------------------------------------------------------------- */
 @theme {
   --color-brand-50: #fdf2f4;
@@ -17,6 +17,13 @@
   --color-brand-800: #6b1925; /* primary hover */
   --color-brand-900: #5c1620;
   --color-brand-950: #3f0d15; /* sidebar */
+
+  /* Operation theatre: case phases on the theatre timeline, and risk / closing-time markers */
+  --color-phase-anaes: #f0a3ad; /* = brand-300 */
+  --color-phase-prep: #e2e8f0; /* = slate-200 */
+  --color-phase-surgery: #8b2635; /* = brand-700 */
+  --color-risk: #e11d48; /* = rose-600 */
+  --color-close-line: #f43f5e; /* = rose-500 */
 
   --color-surface: #f4f2f3; /* page background */
   --color-foreground: #0f172a;

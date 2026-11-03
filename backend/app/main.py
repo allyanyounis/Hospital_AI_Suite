@@ -1,6 +1,6 @@
-"""Hospital AI Suite API: one FastAPI app serving the AI medical scribe and the AI voice receptionist.
+"""Hospital AI Suite API: the hospital management system's backend, one FastAPI app for every module.
 
-Run:  uvicorn app.main:app --reload --port 8000
+Run:  uvicorn app.main:app --reload --port 8000     (from backend/; settings come from backend/.env)
 """
 
 import logging
@@ -9,22 +9,34 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import auth_router
-from .config import DEV_SESSION_SECRET, get_settings
-from .database import init_db
-from .reception import router as reception_router
-from .reception import vapi
-from .schedule import router as schedule_router
-from .scribe import live_router
-from .scribe import router as scribe_router
-from .scribe.repository import purge_expired_content, recover_interrupted_drafts
+from app.core.config import DEV_SESSION_SECRET, get_settings
+from app.core.database import init_db
+from app.core.modules import load_modules
+from app.modules.scribe.repository import purge_expired_content, recover_interrupted_drafts
 
-settings = get_settings()
 log = logging.getLogger("hospital_ai")
+
+# The hospital's modules, mounted in this order. Add a new module (its package has a module.py) here.
+# The voice receptionist goes last: its public webhooks own "POST /".
+INSTALLED_MODULES = [
+    "system",
+    "auth",
+    "organization",
+    "staff",
+    "patients",
+    "scheduling",
+    "appointments",
+    "scribe",
+    "clinical",
+    "theatre",
+    "portal",
+    "reception",
+]
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    settings = get_settings()
     init_db()
     recover_interrupted_drafts()
     purge_expired_content(settings.retention_days)
@@ -35,24 +47,20 @@ async def lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title="Hospital AI Suite", version="1.0.0", lifespan=lifespan)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.cors_origins,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    allow_credentials=True,
-)
+def create_app() -> FastAPI:
+    settings = get_settings()
+    app = FastAPI(title=f"{settings.hospital_name} API", version="2.0.0", lifespan=lifespan)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_origins,
+        allow_methods=["*"],
+        allow_headers=["*"],
+        allow_credentials=True,
+    )
+    for module in load_modules(INSTALLED_MODULES):
+        for router in module.routers:
+            app.include_router(router)
+    return app
 
 
-@app.get("/api/health", tags=["session"])
-def health():
-    return {"status": "ok"}
-
-
-app.include_router(auth_router.router)
-app.include_router(schedule_router.router)
-app.include_router(scribe_router.router)
-app.include_router(live_router.router)
-app.include_router(reception_router.router)
-app.include_router(vapi.router)  # public webhooks last: it owns "POST /"
+app = create_app()

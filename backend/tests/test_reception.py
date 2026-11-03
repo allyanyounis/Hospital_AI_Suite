@@ -4,8 +4,9 @@ from datetime import datetime
 
 import pytest
 
-from app.clock import to_aware
-from app.reception import booking, parsing
+from app.core.clock import to_aware
+from app.modules.appointments import booking
+from app.modules.reception import parsing
 from tests.conftest import login
 
 # Monday 2 November 2026, 08:00 clinic time. Default schedule: Mon-Fri 09:00-17:00, lunch 13:00-14:00, 15-min slots.
@@ -74,7 +75,7 @@ def test_books_a_valid_slot_and_reports_it_to_the_agent(client):
     [
         ("2026-11-03T10:10:00", "not a valid slot"),  # off the 15-minute grid
         ("2026-11-03T13:15:00", "on a break"),  # lunch
-        ("2026-11-03T18:00:00", "outside clinic hours"),
+        ("2026-11-03T18:00:00", "outside Dr. Test's OPD hours"),
         ("2026-11-07T10:00:00", "closed on Saturdays"),
         ("2026-10-30T10:00:00", "in the past"),  # last Friday
         ("2026-11-20T10:00:00", "up to 10 days in advance"),
@@ -92,10 +93,9 @@ def test_offers_nearest_free_slots_when_taken(client):
 
 
 def test_holidays_from_the_scheduler_block_bookings(client):
-    login(client)
-    schedule = client.get("/api/schedule").json()
-    schedule["holidays"] = ["2026-11-04"]
-    assert client.put("/api/schedule", json=schedule).status_code == 200
+    login(client, "admin")
+    closures = {"closures": [{"date": "2026-11-04", "reason": "Public holiday"}]}
+    assert client.put("/api/closures", json=closures).status_code == 200
     assert "holiday" in book(client, "2026-11-04T10:00:00")["result"]
 
 
@@ -123,12 +123,13 @@ def test_public_availability_never_lists_patients(client):
 
 def test_dashboard_lists_and_cancels_with_sign_in(client):
     book(client, "2026-11-03T09:30:00", name="Dashboard Patient")
-    assert client.get("/api/reception/appointments").status_code == 401
+    assert client.get("/api/appointments").status_code == 401
     login(client)
-    [appt] = client.get("/api/reception/appointments").json()
+    [appt] = client.get("/api/appointments").json()
     assert appt["patient_name"] == "Dashboard Patient"
+    assert appt["practitioner"]["display_name"] == "Dr. Test" and appt["booked_via"] == "voice"
     assert datetime.fromisoformat(appt["start_time"]) == to_aware(datetime(2026, 11, 3, 9, 30))
-    assert client.post(f"/api/reception/appointments/{appt['id']}/cancel").json()["canceled"] is True
+    assert client.post(f"/api/appointments/{appt['id']}/cancel").json()["canceled"] is True
 
 
 def test_end_of_call_report_attaches_the_transcript(client):
@@ -148,12 +149,12 @@ def test_end_of_call_report_attaches_the_transcript(client):
     }
     assert client.post("/webhook", json=report).json() == {"status": "ok", "saved": 1}
     login(client)
-    [appt] = client.get("/api/reception/appointments").json()
+    [appt] = client.get("/api/appointments").json()
     assert appt["transcript"] == "AI: Hello, how can I help?\nUser: Book me tomorrow at noon."
 
 
 def test_vapi_secret_is_enforced_when_set(client, monkeypatch):
-    from app.config import get_settings
+    from app.core.config import get_settings
 
     monkeypatch.setattr(get_settings(), "vapi_secret", "s3cret")
     assert client.post("/vapi", json=vapi("check_availability")).status_code == 401

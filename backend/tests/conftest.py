@@ -5,7 +5,7 @@ import os
 
 from sqlalchemy.engine import make_url
 
-from app.config import get_settings
+from app.core.config import get_settings
 
 _url = os.environ.get("TEST_DATABASE_URL") or make_url(get_settings().database_url).set(
     database="hospital_ai_test"
@@ -18,11 +18,21 @@ import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 from sqlalchemy import text  # noqa: E402
 
-from app import main, security  # noqa: E402
-from app.database import Base, engine, init_db  # noqa: E402
-from app.scribe import router as scribe_router  # noqa: E402
-from app.scribe.notes import ClinicalCodes, GeneratedDocument, GeneratedNote, NoteReview, TaskList  # noqa: E402
-from app.users import save_user  # noqa: E402
+from app import main  # noqa: E402
+from app.core.database import (  # noqa: E402
+    Base,
+    engine,
+    init_db,
+    session_scope,  # noqa: E402
+)
+from app.modules.auth import security  # noqa: E402
+from app.modules.auth.cli import save_user  # noqa: E402
+from app.modules.organization.schemas import DepartmentIn  # noqa: E402
+from app.modules.organization.service import create_department  # noqa: E402
+from app.modules.scribe import router as scribe_router  # noqa: E402
+from app.modules.scribe.notes import ClinicalCodes, GeneratedDocument, GeneratedNote, NoteReview, TaskList  # noqa: E402
+from app.modules.staff import save_profile  # noqa: E402
+from app.modules.staff.schemas import StaffProfileIn  # noqa: E402
 
 PASSWORD = "correct-horse"
 ORIGIN = {"origin": "http://localhost:3000"}
@@ -127,8 +137,12 @@ def client(monkeypatch):
     _reset_database()
     security._failed_logins.clear()
     monkeypatch.setattr(scribe_router, "get_note_generator", lambda _settings: FakeGenerator())
-    save_user("drtest", "Dr. Test", "clinician", PASSWORD)
+    save_user("drtest", "Dr. Test", "doctor", PASSWORD)
     save_user("admin", "Admin", "admin", PASSWORD)
+    with session_scope() as db:  # one department; drtest is the hospital's one bookable doctor
+        department = create_department(db, None, DepartmentIn(code="GEN", name="General Medicine"))
+        for username, bookable in (("drtest", True), ("admin", False)):
+            save_profile(db, None, username, StaffProfileIn(department_id=department.id, bookable=bookable))
     with TestClient(main.app) as c:
         yield c
 
